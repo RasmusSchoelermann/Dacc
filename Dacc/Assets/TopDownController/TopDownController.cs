@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
 
+
 public class TopDownController : NetworkBehaviour
 {
 
@@ -12,6 +13,7 @@ public class TopDownController : NetworkBehaviour
     public bool walking;
     public NavMeshAgent Agent;
     public Camera pcam;
+    public int Team = 0;
 
     public float pCamSpeed = 20f;
     public float pBorder = 10f;
@@ -24,11 +26,19 @@ public class TopDownController : NetworkBehaviour
 
     public bool UnitHit = false;
 
+    Unit[,] Feld = new Unit[8,8];
+    Unit[] Bank = new Unit[8];
+   
+        
     GameObject currentUnit;
+    Unit selectedUnit;
+    int Px;
+    int Py;
 
     void Awake()
     {
- 
+        Feld[0, 6] = new Unit();
+
         //navMeshAgent = Agent.GetComponent<NavMeshAgent>();
         //pcam = GameObject.Find("PlayerCamera").GetComponent<Camera>();
     }
@@ -50,6 +60,10 @@ public class TopDownController : NetworkBehaviour
                 if(hit.transform.gameObject.tag == "Unit")
                 {
                     currentUnit = hit.transform.gameObject;
+                    BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                    selectedUnit = Feld[test.Bx, test.By];
+                    Px = test.Bx;
+                    Py = test.By;
                     UnitHit = true;
                 }
             }
@@ -72,7 +86,30 @@ public class TopDownController : NetworkBehaviour
                     {
                         CmdScrFigureSetDestination(hit.transform.gameObject.transform.position,currentUnit);
                         UnitHit = false;
+                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                        if (Feld[test.Bx,test.By] == null)
+                        {
+                            Feld[test.Bx, test.By] = selectedUnit;
+                            Feld[Px, Py] = null;
+                            currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
+                            currentUnit.GetComponent<BoardLocation>().By = test.By;
+                        }
+
+                    }
+                    else if(hit.transform.gameObject.tag == "Bank")
+                    {
+                        CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
+                        UnitHit = false;
+                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                        if(Bank[test.Bx] == null)
+                        {
+                            Bank[test.Bx] = selectedUnit;
+                            Feld[Px, Py] = null;
+                            currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
+                            currentUnit.GetComponent<BoardLocation>().By = test.By;
+                        }
                         
+                       
                     }
                 }
             }
