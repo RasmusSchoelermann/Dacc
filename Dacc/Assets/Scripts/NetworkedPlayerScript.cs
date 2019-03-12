@@ -5,13 +5,13 @@ using UnityEngine.Networking;
 
 public class NetworkedPlayerScript : NetworkBehaviour
 {
-    public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpsController;
+    public TopDownController controller;
     public Camera fpsCamera;
     public AudioListener audioListener;
 
     public override void OnStartLocalPlayer()
     {
-        fpsController.enabled = true;
+        controller.enabled = true;
         fpsCamera.enabled = true;
         audioListener.enabled = true;
 
