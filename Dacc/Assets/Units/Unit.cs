@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
     public int Damage = 10;
     public int Range = 1;
     public int Attackspeed = 1;
+    Battle test;
 
     // Start is called before the first frame update
     void Start()
@@ -23,4 +24,22 @@ public class Unit : MonoBehaviour
     {
         
     }
+
+    public void startAi(Battle Battleboard ,GameObject[,] BattleBoardPlanes)
+    {
+        test = Battleboard;
+        //gameObject.transform.position;
+        test.MoveUnit(this, 2, 2);
+    }
+
+    void stopAi()
+    {
+
+    }
+
+    void BattleKI()
+    {
+
+    }
+        
 }
