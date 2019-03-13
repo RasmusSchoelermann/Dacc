@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 public class TopDownController : NetworkBehaviour
@@ -36,11 +37,19 @@ public class TopDownController : NetworkBehaviour
     int Px;
     int Py;
 
+    //UI
+    public Image pLock;
+    public Image pBuyUi;
+    bool UIActive = false;
+    
+
     void Awake()
     {
         Feld[0, 6] = new Unit();
         Feld[3, 3] = new Unit();
 
+        pBuyUi.enabled = false;
+        pLock.enabled = false;
     }
 
     void Update()
@@ -52,6 +61,25 @@ public class TopDownController : NetworkBehaviour
         Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         anim.SetBool("IsWalking", walking);
+
+        if(Input.GetKeyDown("space"))
+        {
+            switch(UIActive)
+            {
+                case false:
+                    pBuyUi.enabled = true;
+                    pLock.enabled = true;
+                    UIActive = true;
+                    break;
+                case true:
+                    pBuyUi.enabled = false;
+                    pLock.enabled = false;
+                    UIActive = false;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         if (Input.GetKey("y"))
         {
