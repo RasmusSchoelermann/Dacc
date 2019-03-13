@@ -9,11 +9,12 @@ public class TopDownController : NetworkBehaviour
 {
 
     public Animator anim;
+    public GameObject Board;
     public NavMeshAgent navMeshAgent;
     public bool walking;
     public NavMeshAgent Agent;
     public Camera pcam;
-    public int Team = 0;
+    public int PlayerTeam = 0;
 
     public float pCamSpeed = 20f;
     public float pBorder = 10f;
@@ -38,6 +39,7 @@ public class TopDownController : NetworkBehaviour
     void Awake()
     {
         Feld[0, 6] = new Unit();
+        Feld[3, 3] = new Unit();
 
         //navMeshAgent = Agent.GetComponent<NavMeshAgent>();
         //pcam = GameObject.Find("PlayerCamera").GetComponent<Camera>();
@@ -53,18 +55,28 @@ public class TopDownController : NetworkBehaviour
         RaycastHit hit;
         anim.SetBool("IsWalking", walking);
 
-        if(Input.GetKey("q"))
+        if (Input.GetKey("y"))
+        {
+            Board.GetComponent<Battle>().startbattle(Feld);
+        }
+
+            if (Input.GetKey("q"))
         {
             if(Physics.Raycast(ray,out hit))
             {
                 if(hit.transform.gameObject.tag == "Unit")
                 {
-                    currentUnit = hit.transform.gameObject;
-                    BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                    selectedUnit = Feld[test.Bx, test.By];
-                    Px = test.Bx;
-                    Py = test.By;
-                    UnitHit = true;
+                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                    {
+                        currentUnit = hit.transform.gameObject;
+                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                        selectedUnit = Feld[test.Bx, test.By];
+                        Px = test.Bx;
+                        Py = test.By;
+                        UnitHit = true;
+                    }
+                    else
+                        return;
                 }
             }
         }
