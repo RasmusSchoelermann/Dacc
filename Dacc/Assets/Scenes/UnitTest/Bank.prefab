@@ -651,9 +651,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 584503754228565646}
+  - component: {fileID: 7239460485358489716}
+  - component: {fileID: 3094649268543716476}
   m_Layer: 0
   m_Name: Bank
-  m_TagString: Untagged
+  m_TagString: Bank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -666,7 +668,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 584503754228565647}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.0525901, y: 1.212451, z: 8.53}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 584503753815487645}
@@ -680,6 +682,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7239460485358489716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584503754228565647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10e8f490e71bb144bd6fdd29546fe28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
+--- !u!114 &3094649268543716476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584503754228565647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511a9141b29a3f94daf8e1e8fcd7d964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Slots:
+  - {fileID: 584503753815487633}
+  - {fileID: 584503753696640456}
+  - {fileID: 584503754956592063}
+  - {fileID: 584503754697343869}
+  - {fileID: 584503754223369243}
+  - {fileID: 584503754049135985}
+  - {fileID: 584503753102422137}
+  - {fileID: 584503753947414466}
 --- !u!1 &584503754697343869
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 
 public class TopDownController : NetworkBehaviour
@@ -11,11 +12,12 @@ public class TopDownController : NetworkBehaviour
 
     public Animator anim;
     public GameObject Board;
+    public GameObject Bankfrech;
     public NavMeshAgent navMeshAgent;
     public bool walking;
     public NavMeshAgent Agent;
     public Camera pcam;
-    [SyncVar] public int PlayerTeam = 2;
+    [SyncVar] public int PlayerTeam = 0;
 
     public float pCamSpeed = 20f;
     public float pBorder = 10f;
@@ -40,16 +42,53 @@ public class TopDownController : NetworkBehaviour
     //UI
     public Image pLock;
     public Image pBuyUi;
+   // public Image pUnit;
+    public Button pUnitButton;
     bool UIActive = false;
-    
+
+    //Battle
+    public GameObject UnitsPrefab;
+    public Vector3 enemyspawnposition;
+    public Vector3 spawnposition;
+    public Quaternion spawnRotation;
+
+    //Unit
+
+
+    [System.Serializable]
+    public class MyEventType : UnityEvent { }
+
+    public MyEventType OnEvent;
 
     void Awake()
     {
-        Feld[0, 6] = new Unit();
-        Feld[3, 3] = new Unit();
-
         pBuyUi.enabled = false;
         pLock.enabled = false;
+        //pUnit.enabled = false;
+
+        pUnitButton.onClick.AddListener(BuyUnit);
+        StartCoroutine(ExecuteAfterTime(1));
+    }
+
+    
+
+    public void BuyUnit()
+    {
+        print("oh boy it begins again");
+        spawnposition = Bankfrech.GetComponent<Bank>().Slots[1].transform.position;
+        spawnposition.x = spawnposition.x + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.x;
+        spawnposition.y = spawnposition.y + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.y;
+        spawnposition.z = spawnposition.z + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.z;
+        //spawnposition.x = Bankfrech.GetComponent<Bank>().Slots[1].transform.localPosition.x + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.localPosition.x;
+        //spawnposition.z = Bankfrech.GetComponent<Bank>().Slots[1].transform.localPosition.z + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.localPosition.z;
+        //spawnposition.y = 5;
+        var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
+        unit.tag = "Unit";
+        unit.GetComponent<Unit>().Team = 0;
+        unit.GetComponent<BoardLocation>().Bx = 0;
+        unit.GetComponent<BoardLocation>().By = 0;
+        NetworkServer.Spawn(unit);
+        Bank[0] = unit.GetComponent<Unit>();
     }
 
     void Update()
@@ -62,6 +101,7 @@ public class TopDownController : NetworkBehaviour
         RaycastHit hit;
         anim.SetBool("IsWalking", walking);
 
+        
         if(Input.GetKeyDown("space"))
         {
             switch(UIActive)
@@ -69,16 +109,41 @@ public class TopDownController : NetworkBehaviour
                 case false:
                     pBuyUi.enabled = true;
                     pLock.enabled = true;
+                    //pUnit.enabled = true;
                     UIActive = true;
                     break;
                 case true:
                     pBuyUi.enabled = false;
                     pLock.enabled = false;
+                   // pUnit.enabled = false;
                     UIActive = false;
                     break;
                 default:
                     break;
             }
+        }
+
+        if (Input.GetKeyDown("f"))
+        {
+
+            var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
+            unit.tag = "Unit";
+            unit.GetComponent<Unit>().Team = 0;
+            unit.GetComponent<BoardLocation>().Bx = 0;
+            unit.GetComponent<BoardLocation>().By = 6;
+            NetworkServer.Spawn(unit);
+            Feld[0, 6] = unit.GetComponent<Unit>();
+
+        }
+        if (Input.GetKeyDown("e"))
+        {
+
+            var unit = (GameObject)Instantiate(UnitsPrefab, enemyspawnposition, spawnRotation);
+            unit.tag = "Unit";
+            unit.GetComponent<BoardLocation>().Bx = 3;
+            unit.GetComponent<BoardLocation>().By = 3;
+            NetworkServer.Spawn(unit);
+            Feld[3, 3] = unit.GetComponent<Unit>();
         }
 
         if (Input.GetKey("y"))
@@ -195,6 +260,37 @@ public class TopDownController : NetworkBehaviour
 
         pcam.transform.position = pos;
         //Ray ray = Camera.pCam.ScreenPoint
+    }
+
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        GameObject[] temp = GameObject.FindGameObjectsWithTag("Feld");
+        foreach (GameObject g in temp)
+        {
+            if (g.name.StartsWith("Board"))
+            {
+                TBB tempi = g.GetComponent<TBB>();
+                int test = tempi.team;
+                if (test == 0)
+                {
+                    Board = g;
+                }
+            }
+        }
+        temp = GameObject.FindGameObjectsWithTag("Bank");
+        foreach (GameObject g in temp)
+        {
+            if (g.name.StartsWith("Bank"))
+            {
+                if (g.GetComponent<TBB>().team == PlayerTeam)
+                {
+                    Bankfrech = g;
+                }
+            }
+            
+        }
     }
 
     [Command]

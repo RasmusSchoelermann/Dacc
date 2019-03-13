@@ -4936,9 +4936,10 @@ GameObject:
   - component: {fileID: 6399508182259092319}
   - component: {fileID: 59365619227732226}
   - component: {fileID: 6118140062615375555}
+  - component: {fileID: 6461798077264292387}
   m_Layer: 0
   m_Name: Board
-  m_TagString: Untagged
+  m_TagString: Feld
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5202,6 +5203,19 @@ MonoBehaviour:
     - {fileID: 4557161288612298607}
     - {fileID: 8856365551278820562}
     - {fileID: 4477448567960912740}
+--- !u!114 &6461798077264292387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399508182259092312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10e8f490e71bb144bd6fdd29546fe28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
 --- !u!1 &6476339049201925124
 GameObject:
   m_ObjectHideFlags: 0

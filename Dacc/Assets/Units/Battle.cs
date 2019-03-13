@@ -9,6 +9,7 @@ public class Battle : NetworkBehaviour
     public Vector3 spawnposition;
     public Quaternion spawnRotation;
 
+
     [System.Serializable]
     public class Planes2d
     {
@@ -18,7 +19,7 @@ public class Battle : NetworkBehaviour
 
     public GameObject[,] PlanesArray;
 
-  
+
     bool spawn = false;
     Unit[,] BattleBoard = new Unit[8,8];
 
