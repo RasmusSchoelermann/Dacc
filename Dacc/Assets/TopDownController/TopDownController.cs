@@ -14,7 +14,7 @@ public class TopDownController : NetworkBehaviour
     public bool walking;
     public NavMeshAgent Agent;
     public Camera pcam;
-    public int PlayerTeam = 0;
+    [SyncVar] public int PlayerTeam = 2;
 
     public float pCamSpeed = 20f;
     public float pBorder = 10f;
@@ -41,8 +41,6 @@ public class TopDownController : NetworkBehaviour
         Feld[0, 6] = new Unit();
         Feld[3, 3] = new Unit();
 
-        //navMeshAgent = Agent.GetComponent<NavMeshAgent>();
-        //pcam = GameObject.Find("PlayerCamera").GetComponent<Camera>();
     }
 
     void Update()
@@ -59,8 +57,7 @@ public class TopDownController : NetworkBehaviour
         {
             Board.GetComponent<Battle>().startbattle(Feld);
         }
-
-            if (Input.GetKey("q"))
+        if (Input.GetKey("q"))
         {
             if(Physics.Raycast(ray,out hit))
             {
@@ -187,7 +184,7 @@ public class TopDownController : NetworkBehaviour
 
     [Command]
     public void CmdScrFigureSetDestination(Vector3 argPosition, GameObject Unit)
-    {//Step B, I do simple work, I not verifi a valid position in server, I only send to all clients
+    {
         Vector3 temp = argPosition;
         temp.y = Unit.transform.position.y;
         Unit.transform.position = temp;
@@ -195,10 +192,29 @@ public class TopDownController : NetworkBehaviour
 
     [ClientRpc]
     public void RpcScrFigureSetDestination(Vector3 argPosition, GameObject Unit)
-    {//Step C, only the clients move
+    {
         Vector3 temp = argPosition;
         temp.y = Unit.transform.position.y;
         Unit.transform.position = temp;
     }
+
+    [Command]
+    public void CmdScrTeamSetDestination(int team)
+    {
+        PlayerTeam = team;
+        RpcScrTeamSetDestination(team);
+    }
+
+    [ClientRpc]
+    public void RpcScrTeamSetDestination(int team)
+    {
+        PlayerTeam = team;
+    }
+    [Command]
+    public void CmdScrTeamPrintSetDestination(int team)
+    {
+        print(team);
+    }
+    
 
 }
