@@ -7,6 +7,7 @@ TagManager:
   - Unit
   - Feld
   - Bank
+  - Pool
   layers:
   - Default
   - TransparentFX

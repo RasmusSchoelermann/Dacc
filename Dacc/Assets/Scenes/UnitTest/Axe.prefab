@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3177241310477228361}
   - component: {fileID: 6586872597100365004}
   m_Layer: 0
-  m_Name: TestRange
+  m_Name: Axe
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 0
+  id: 1
   ArrayX: 0
   ArrayY: 0
   maxHp: 100

@@ -14,6 +14,7 @@ public class TopDownController : NetworkBehaviour
     public Animator anim;
     public GameObject Board;
     public GameObject Bankfrech;
+    public GameObject pooler;
     public NavMeshAgent navMeshAgent;
     public bool walking;
     public NavMeshAgent Agent;
@@ -47,14 +48,16 @@ public class TopDownController : NetworkBehaviour
     //public Button pUnit;
     public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
     bool UIActive = false;
-
+    //Pool
+    GameObject UPool = GameObject.FindGameObjectWithTag("Pool");
     //Battle
     public GameObject UnitsPrefab;
     public Vector3 enemyspawnposition;
     public Vector3 spawnposition;
     public Quaternion spawnRotation;
 
-    //Unit
+    //Player
+    public int Level = 1;
 
 
     [System.Serializable]
@@ -68,6 +71,30 @@ public class TopDownController : NetworkBehaviour
 
         StartCoroutine(ExecuteAfterTime(4));
     }
+
+    public GameObject PullUnit(GameObject Unit)
+    {
+        int randChance;
+
+        randChance = Random.Range(1, 100);
+        if (Level == 1)
+        {
+            int randUID;
+
+            randUID = Random.Range(0, 1);
+            int uID = UPool.GetComponent<Pool>().Seltenheit[0].Units[randUID].gameObject.GetComponent<Unit>().id;
+            if(randChance <=50)
+            {
+                UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
+            }
+            else
+            {
+                UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
+            }
+        }
+        return Unit;
+    }
+
 
     void Update()
     {
