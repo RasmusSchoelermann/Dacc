@@ -66,7 +66,7 @@ public class TopDownController : NetworkBehaviour
     {
         pBuyUi.SetActive(false);
 
-        StartCoroutine(ExecuteAfterTime(2));
+        StartCoroutine(ExecuteAfterTime(4));
     }
 
     void Update()
@@ -124,7 +124,7 @@ public class TopDownController : NetworkBehaviour
         {
             Board.GetComponent<Battle>().startbattle(Feld);
         }
-        if (Input.GetKey("q"))
+        if (Input.GetKeyDown("q"))
         {
             if(Physics.Raycast(ray,out hit))
             {
@@ -203,7 +203,15 @@ public class TopDownController : NetworkBehaviour
                             CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
                             UnitHit = false;
                             Bank[test.Bx] = selectedUnit;
-                            Feld[Px, Py] = null;
+                            if (Py == -1)
+                            {
+                                Bank[Px] = null;
+                            }
+                            else
+                            {
+                                Feld[Px, Py] = null;
+
+                            }
                             currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                             currentUnit.GetComponent<BoardLocation>().By = -1;
                         }
