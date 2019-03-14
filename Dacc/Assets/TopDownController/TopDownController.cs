@@ -74,16 +74,35 @@ public class TopDownController : NetworkBehaviour
 
     public void BuyUnit()
     {
-        print("oh boy it begins again");
-        spawnposition = Bankfrech.GetComponent<Bank>().Slots[0].gameObject.transform.position;
-        spawnposition.y = 4.7f;
-        var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
-        unit.tag = "Unit";
-        unit.GetComponent<Unit>().Team = PlayerTeam;
-        unit.GetComponent<BoardLocation>().Bx = 0;
-        unit.GetComponent<BoardLocation>().By = -1;
-        NetworkServer.Spawn(unit);
-        Bank[0] = unit.GetComponent<Unit>();
+        
+        for (int Bankpos = 0; Bankpos < 8;)
+        {
+            if (Bank[Bankpos] == null)
+            {
+                print("oh boy it begins again");
+                spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                spawnposition.y = 4.7f;
+                var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
+                unit.tag = "Unit";
+                unit.GetComponent<Unit>().Team = PlayerTeam;
+                unit.GetComponent<BoardLocation>().Bx = Bankpos;
+                unit.GetComponent<BoardLocation>().By = -1;
+                NetworkServer.Spawn(unit);
+                Bank[Bankpos] = unit.GetComponent<Unit>();
+                return;
+            }
+            else
+            {
+                Bankpos++;
+                if (Bankpos == 8)
+                {
+                    print("Kein Platz");
+                }
+            }
+            
+        }
+       
+       
     }
 
     void Update()
@@ -190,11 +209,13 @@ public class TopDownController : NetworkBehaviour
                 {
                     if (hit.transform.tag == "Feld")
                     {
-                        CmdScrFigureSetDestination(hit.transform.gameObject.transform.position,currentUnit);
-                        UnitHit = false;
                         BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+
                         if (Feld[test.Bx,test.By] == null)
                         {
+                            CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
+                            UnitHit = false;
+
                             Feld[test.Bx, test.By] = selectedUnit;
                             if (Py == -1)
                             {
@@ -209,20 +230,25 @@ public class TopDownController : NetworkBehaviour
                             currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                             currentUnit.GetComponent<BoardLocation>().By = test.By;
                         }
+                        else
+                            UnitHit = false;
 
                     }
                     else if(hit.transform.gameObject.tag == "Bank")
                     {
-                        CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
-                        UnitHit = false;
+                        
                         BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                        if(Bank[test.Bx] == null)
+                        if (Bank[test.Bx] == null)
                         {
+                            CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
+                            UnitHit = false;
                             Bank[test.Bx] = selectedUnit;
                             Feld[Px, Py] = null;
                             currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                             currentUnit.GetComponent<BoardLocation>().By = -1;
                         }
+                        else
+                            UnitHit = false;
                         
                        
                     }

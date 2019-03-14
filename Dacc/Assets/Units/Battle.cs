@@ -8,6 +8,9 @@ public class Battle : NetworkBehaviour
     public Vector3 enemyspawnposition;
     public Vector3 spawnposition;
     public Quaternion spawnRotation;
+    int round = 0;
+    bool inbattle = false;
+    int creeppower = 0;
 
 
     [System.Serializable]
@@ -22,6 +25,7 @@ public class Battle : NetworkBehaviour
 
     bool spawn = false;
     Unit[,] BattleBoard = new Unit[8,8];
+    Unit[,] BoardSave = new Unit[8, 8];
 
     // Start is called before the first frame update
     void Start()
@@ -40,8 +44,8 @@ public class Battle : NetworkBehaviour
 
         if(Input.GetKeyDown("b"))
         {
-            startbattle(BattleBoard);
-        }
+            endbattle();
+        }/*
 
         if (Input.GetKeyDown("f"))
         {
@@ -64,21 +68,51 @@ public class Battle : NetworkBehaviour
             unit.GetComponent<BoardLocation>().By = 3;
             NetworkServer.Spawn(unit);
             BattleBoard[3, 3] = unit.GetComponent<Unit>();
-        }
+        }*/
 
         
     }
 
     public void startbattle(Unit[,] boardref)
     {
-        BattleBoard = boardref;
+        if(inbattle)
+        {
+            return;
+        }
+        inbattle = true;
+        round++;
+        BoardSave = boardref;
+        
+        foreach (Unit U in BoardSave)
+        {
+            if (U != null)
+            {
+                GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
+                NetworkServer.Spawn(temp);
+                U.ArrayX = U.GetComponent<BoardLocation>().Bx;
+                U.ArrayY = U.GetComponent<BoardLocation>().By;
+                BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
+                U.gameObject.SetActive(false);
+            }
+
+        }
+
+        if(round < 4 || round > 5 && round % 5 == 0)
+        {
+            spawncreeps();
+        }
+        else
+        {
+            // FindEnemy
+        }
+    
         foreach (Unit U in BattleBoard)
         {
             if (U != null)
             {
                 U.ArrayX = U.GetComponent<BoardLocation>().Bx;
                 U.ArrayY = U.GetComponent<BoardLocation>().By;
-                U.startAi(this, PlanesArray);
+                //U.startAi(this, PlanesArray);
             }
 
         }
@@ -99,5 +133,44 @@ public class Battle : NetworkBehaviour
     public void RangeCheck(Unit Unit)
     {
 
+    }
+
+    void endbattle()
+    {
+        inbattle = false;
+        foreach (Unit U in BattleBoard)
+        {
+            if (U != null)
+            {
+                Destroy(U.gameObject);
+            }
+
+        }
+
+        foreach (Unit u in BoardSave)
+        {
+            if(u != null)
+            {
+                u.gameObject.SetActive(true);
+            }
+            
+        }
+    }
+
+    void spawncreeps()
+    {
+        if(creeppower == 0)
+        {
+            Vector3 newposition = testArray[0].Planes[3].gameObject.transform.position;
+            newposition.y = 4.5f;
+            var Creep = (GameObject)Instantiate(UnitsPrefab, newposition, spawnRotation);
+            Creep.tag = "Unit";
+            Creep.GetComponent<BoardLocation>().Bx = 0;
+            Creep.GetComponent<BoardLocation>().By = 3;
+            Creep.GetComponent<Unit>().Team = -1;
+            NetworkServer.Spawn(Creep);
+            BattleBoard[0, 3] = Creep.GetComponent<Unit>();
+        }
+        //creeppower++;
     }
 }
