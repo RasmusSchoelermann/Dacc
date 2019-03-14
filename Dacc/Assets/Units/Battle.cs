@@ -25,6 +25,8 @@ public class Battle : NetworkBehaviour
 
     bool spawn = false;
     Unit[,] BattleBoard = new Unit[8,8];
+    Unit[] OwnUnits = new Unit[10];
+    Unit[] EnemyUnits = new Unit[10];
     Unit[,] BoardSave = new Unit[8, 8];
 
     // Start is called before the first frame update
@@ -82,7 +84,7 @@ public class Battle : NetworkBehaviour
         inbattle = true;
         round++;
         BoardSave = boardref;
-        
+        int c =0;
         foreach (Unit U in BoardSave)
         {
             if (U != null)
@@ -92,7 +94,9 @@ public class Battle : NetworkBehaviour
                 U.ArrayX = U.GetComponent<BoardLocation>().Bx;
                 U.ArrayY = U.GetComponent<BoardLocation>().By;
                 BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
+                OwnUnits[c] = temp.GetComponent<Unit>();
                 U.gameObject.SetActive(false);
+                c++;
             }
 
         }
@@ -116,6 +120,20 @@ public class Battle : NetworkBehaviour
             }
 
         }
+        battle();
+    }
+
+    void battle()
+    {
+        foreach  (Unit u in OwnUnits)
+        {
+            if(u != null)
+            {
+                u.BoardTeam = true;
+                u.startAi(this);
+            }
+           
+        }
     }
 
     public void MoveUnit(Unit Unittomove, int X,int Y)
@@ -130,9 +148,49 @@ public class Battle : NetworkBehaviour
 
     }
 
-    public void RangeCheck(Unit Unit)
+    public Unit RangeCheck(Unit Unit,bool boardteam)
     {
+        Unit temp = null;
+        float dis = 1000;
+        if (boardteam == true)
+        {
+            foreach  (Unit u in EnemyUnits)
+            {
+                if(u != null)
+                {
+                    float Udis = (u.ArrayX - Unit.ArrayX) + (u.ArrayY - Unit.ArrayY);
+                    if (Udis < 0)
+                    {
+                        Udis = Udis * -1;
+                    }
+                    if (Udis <= Unit.Range)
+                    {
+                        Unit.targetinrange = true;
+                        return u;
+                    }
+                    else
+                    {
+                        float newdis = Udis;
+                        if (newdis < dis)
+                        {
+                            temp = u;
+                            dis = newdis;
+                        }
 
+                    }
+                }
+               
+            }
+            return temp;
+        }
+        else
+        {
+            foreach (Unit u in OwnUnits)
+            {
+
+            }
+        }
+        return null;
     }
 
     void endbattle()
@@ -162,14 +220,16 @@ public class Battle : NetworkBehaviour
         if(creeppower == 0)
         {
             Vector3 newposition = testArray[0].Planes[3].gameObject.transform.position;
-            newposition.y = 4.5f;
+            newposition.y = 4.7f;
             var Creep = (GameObject)Instantiate(UnitsPrefab, newposition, spawnRotation);
             Creep.tag = "Unit";
             Creep.GetComponent<BoardLocation>().Bx = 0;
             Creep.GetComponent<BoardLocation>().By = 3;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
+            EnemyUnits[0] = Creep.GetComponent<Unit>();
             BattleBoard[0, 3] = Creep.GetComponent<Unit>();
+            
         }
         //creeppower++;
     }
