@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour
     {
         test = Battleboard;
         //gameObject.transform.position;
-        test.MoveUnit(this, 2, 2);
+        test.MoveUnit(this, 3, 3);
     }
 
     void stopAi()

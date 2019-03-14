@@ -71,7 +71,7 @@ public class Battle : NetworkBehaviour
 
     public void startbattle(Unit[,] boardref)
     {
-        //BattleBoard = boardref;
+        BattleBoard = boardref;
         foreach (Unit U in BattleBoard)
         {
             if (U != null)

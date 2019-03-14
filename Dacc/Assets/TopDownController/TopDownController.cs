@@ -67,7 +67,7 @@ public class TopDownController : NetworkBehaviour
         //pUnit.enabled = false;
 
         pUnitButton.onClick.AddListener(BuyUnit);
-        StartCoroutine(ExecuteAfterTime(1));
+        StartCoroutine(ExecuteAfterTime(4));
     }
 
     
@@ -75,18 +75,13 @@ public class TopDownController : NetworkBehaviour
     public void BuyUnit()
     {
         print("oh boy it begins again");
-        spawnposition = Bankfrech.GetComponent<Bank>().Slots[1].transform.position;
-        spawnposition.x = spawnposition.x + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.x;
-        spawnposition.y = spawnposition.y + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.y;
-        spawnposition.z = spawnposition.z + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.position.z;
-        //spawnposition.x = Bankfrech.GetComponent<Bank>().Slots[1].transform.localPosition.x + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.localPosition.x;
-        //spawnposition.z = Bankfrech.GetComponent<Bank>().Slots[1].transform.localPosition.z + Bankfrech.GetComponent<Bank>().Slots[1].gameObject.transform.localPosition.z;
-        //spawnposition.y = 5;
+        spawnposition = Bankfrech.GetComponent<Bank>().Slots[0].gameObject.transform.position;
+        spawnposition.y = 4.7f;
         var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
         unit.tag = "Unit";
-        unit.GetComponent<Unit>().Team = 0;
+        unit.GetComponent<Unit>().Team = PlayerTeam;
         unit.GetComponent<BoardLocation>().Bx = 0;
-        unit.GetComponent<BoardLocation>().By = 0;
+        unit.GetComponent<BoardLocation>().By = -1;
         NetworkServer.Spawn(unit);
         Bank[0] = unit.GetComponent<Unit>();
     }
@@ -160,7 +155,16 @@ public class TopDownController : NetworkBehaviour
                     {
                         currentUnit = hit.transform.gameObject;
                         BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                        selectedUnit = Feld[test.Bx, test.By];
+                        if (test.By == -1)
+                        {
+                            selectedUnit = Bank[test.Bx];
+                        }
+                        else
+                        {
+                            selectedUnit = Feld[test.Bx, test.By];
+
+                        }
+                        
                         Px = test.Bx;
                         Py = test.By;
                         UnitHit = true;
@@ -184,7 +188,7 @@ public class TopDownController : NetworkBehaviour
             {
                 if(Physics.Raycast(ray, out hit))
                 {
-                    if (hit.transform.gameObject.tag == "Feld")
+                    if (hit.transform.tag == "Feld")
                     {
                         CmdScrFigureSetDestination(hit.transform.gameObject.transform.position,currentUnit);
                         UnitHit = false;
@@ -192,7 +196,16 @@ public class TopDownController : NetworkBehaviour
                         if (Feld[test.Bx,test.By] == null)
                         {
                             Feld[test.Bx, test.By] = selectedUnit;
-                            Feld[Px, Py] = null;
+                            if (Py == -1)
+                            {
+                                Bank[Px] = null;
+                            }
+                            else
+                            {
+                                Feld[Px, Py] = null;
+
+                            }
+                            
                             currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                             currentUnit.GetComponent<BoardLocation>().By = test.By;
                         }
@@ -208,7 +221,7 @@ public class TopDownController : NetworkBehaviour
                             Bank[test.Bx] = selectedUnit;
                             Feld[Px, Py] = null;
                             currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
-                            currentUnit.GetComponent<BoardLocation>().By = test.By;
+                            currentUnit.GetComponent<BoardLocation>().By = -1;
                         }
                         
                        
@@ -273,7 +286,7 @@ public class TopDownController : NetworkBehaviour
             {
                 TBB tempi = g.GetComponent<TBB>();
                 int test = tempi.team;
-                if (test == 0)
+                if (test == PlayerTeam)
                 {
                     Board = g;
                 }
