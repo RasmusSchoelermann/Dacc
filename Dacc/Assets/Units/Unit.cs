@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public int Team;
+    public int id;
 
     public int ArrayX;
     public int ArrayY;
