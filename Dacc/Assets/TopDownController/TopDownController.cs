@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 
 public class TopDownController : NetworkBehaviour
@@ -40,10 +41,11 @@ public class TopDownController : NetworkBehaviour
     int Py;
 
     //UI
-    public Image pLock;
-    public Image pBuyUi;
-   // public Image pUnit;
-    public Button pUnitButton;
+    //public Image pLock;
+    
+    public GameObject pBuyUi;
+    //public Button pUnit;
+    public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
     bool UIActive = false;
 
     //Battle
@@ -62,47 +64,9 @@ public class TopDownController : NetworkBehaviour
 
     void Awake()
     {
-        pBuyUi.enabled = false;
-        pLock.enabled = false;
-        //pUnit.enabled = false;
+        pBuyUi.SetActive(false);
 
-        pUnitButton.onClick.AddListener(BuyUnit);
-        StartCoroutine(ExecuteAfterTime(4));
-    }
-
-    
-
-    public void BuyUnit()
-    {
-        
-        for (int Bankpos = 0; Bankpos < 8;)
-        {
-            if (Bank[Bankpos] == null)
-            {
-                print("oh boy it begins again");
-                spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
-                spawnposition.y = 4.7f;
-                var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
-                unit.tag = "Unit";
-                unit.GetComponent<Unit>().Team = PlayerTeam;
-                unit.GetComponent<BoardLocation>().Bx = Bankpos;
-                unit.GetComponent<BoardLocation>().By = -1;
-                NetworkServer.Spawn(unit);
-                Bank[Bankpos] = unit.GetComponent<Unit>();
-                return;
-            }
-            else
-            {
-                Bankpos++;
-                if (Bankpos == 8)
-                {
-                    print("Kein Platz");
-                }
-            }
-            
-        }
-       
-       
+        StartCoroutine(ExecuteAfterTime(2));
     }
 
     void Update()
@@ -121,15 +85,11 @@ public class TopDownController : NetworkBehaviour
             switch(UIActive)
             {
                 case false:
-                    pBuyUi.enabled = true;
-                    pLock.enabled = true;
-                    //pUnit.enabled = true;
+                    pBuyUi.SetActive(true);
                     UIActive = true;
                     break;
                 case true:
-                    pBuyUi.enabled = false;
-                    pLock.enabled = false;
-                   // pUnit.enabled = false;
+                    pBuyUi.SetActive(false);
                     UIActive = false;
                     break;
                 default:
@@ -299,6 +259,39 @@ public class TopDownController : NetworkBehaviour
 
         pcam.transform.position = pos;
         //Ray ray = Camera.pCam.ScreenPoint
+    }
+
+    public void BuyUnit()
+    {
+        for (int Bankpos = 0; Bankpos < 8;)
+        {
+            if (Bank[Bankpos] == null)
+            {
+                print("oh boy it begins again");
+                EventSystem.current.currentSelectedGameObject.SetActive(false);
+                spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                spawnposition.y = 4.7f;
+                var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
+                unit.tag = "Unit";
+                unit.GetComponent<Unit>().Team = PlayerTeam;
+                unit.GetComponent<BoardLocation>().Bx = Bankpos;
+                unit.GetComponent<BoardLocation>().By = -1;
+                NetworkServer.Spawn(unit);
+                Bank[Bankpos] = unit.GetComponent<Unit>();
+                return;
+            }
+            else
+            {
+                Bankpos++;
+                if (Bankpos == 8)
+                {
+                    print("Kein Platz");
+                }
+            }
+
+        }
+
+
     }
 
     IEnumerator ExecuteAfterTime(float time)
