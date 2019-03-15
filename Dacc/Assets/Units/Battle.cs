@@ -24,10 +24,11 @@ public class Battle : NetworkBehaviour
 
 
     bool spawn = false;
-    Unit[,] BattleBoard = new Unit[8,8];
+    public Unit[,] BattleBoard = new Unit[8,8];
     Unit[] OwnUnits = new Unit[10];
     Unit[] EnemyUnits = new Unit[10];
     Unit[,] BoardSave = new Unit[8, 8];
+    int C = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -77,12 +78,15 @@ public class Battle : NetworkBehaviour
 
     public void startbattle(Unit[,] boardref)
     {
+        
+        C = 0;
+
         if(inbattle)
         {
             return;
         }
         inbattle = true;
-        round++;
+        // round++;
         BoardSave = boardref;
         int c =0;
         foreach (Unit U in BoardSave)
@@ -125,6 +129,7 @@ public class Battle : NetworkBehaviour
 
     void battle()
     {
+        
         foreach  (Unit u in OwnUnits)
         {
             if(u != null)
@@ -134,19 +139,48 @@ public class Battle : NetworkBehaviour
             }
            
         }
+       // StartCoroutine(Example(C));
+        // C++;
+    }
+
+    IEnumerator Example(int c)
+    {
+       
+        yield return new WaitForSeconds(0.3f);
+        if(OwnUnits[c] != null)
+        {
+            OwnUnits[c].BoardTeam = true;
+            OwnUnits[c].startAi(this);
+            battle();
+        }
+       
+       
     }
 
     public void MoveUnit(Unit Unittomove, int X,int Y)
     {
-        Vector3 newposition = testArray[X].Planes[Y].gameObject.transform.position;
+        if(X < 0 || X > 7)
+        {
+            return;
+        }
+        if (Y < 0 || Y > 7)
+        {
+            return;
+        }
+        if(BattleBoard[X,Y] != null)
+        {
+            return;
+        }
+        Vector3 newposition = testArray[Y].Planes[X].gameObject.transform.position;
         newposition.y = Unittomove.gameObject.transform.position.y;
         Unittomove.gameObject.transform.position = newposition;
         BattleBoard[X, Y] = Unittomove;
-        BattleBoard[Unittomove.ArrayX, Unittomove.ArrayX] = null;
+        BattleBoard[Unittomove.ArrayX, Unittomove.ArrayY] = null;
         Unittomove.ArrayX = X;
         Unittomove.ArrayY = Y;
 
     }
+   //public void 
 
     public Unit RangeCheck(Unit Unit,bool boardteam)
     {
@@ -158,12 +192,12 @@ public class Battle : NetworkBehaviour
             {
                 if(u != null)
                 {
-                    float Udis = (u.ArrayX - Unit.ArrayX) + (u.ArrayY - Unit.ArrayY);
+                    float Udis =  Mathf.Sqrt(Mathf.Pow(u.ArrayX - Unit.ArrayX, 2) + Mathf.Pow(u.ArrayY - Unit.ArrayY, 2));
                     if (Udis < 0)
                     {
                         Udis = Udis * -1;
                     }
-                    if (Udis <= Unit.Range)
+                    if (Mathf.RoundToInt(Udis) <= Unit.Range)
                     {
                         Unit.targetinrange = true;
                         return u;
@@ -181,6 +215,7 @@ public class Battle : NetworkBehaviour
                 }
                
             }
+            Unit.taargetdis = dis;
             return temp;
         }
         else
@@ -223,8 +258,8 @@ public class Battle : NetworkBehaviour
             newposition.y = 4.7f;
             var Creep = (GameObject)Instantiate(UnitsPrefab, newposition, spawnRotation);
             Creep.tag = "Unit";
-            Creep.GetComponent<BoardLocation>().Bx = 0;
-            Creep.GetComponent<BoardLocation>().By = 3;
+            Creep.GetComponent<BoardLocation>().Bx = 3;
+            Creep.GetComponent<BoardLocation>().By = 0;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
             EnemyUnits[0] = Creep.GetComponent<Unit>();

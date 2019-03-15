@@ -178,12 +178,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 0
+  id: 0
   ArrayX: 0
   ArrayY: 0
   maxHp: 100
   Hp: 100
   Damage: 10
-  Range: 2
+  Range: 1
   Attackspeed: 1
   BoardTeam: 0
   targetinrange: 0
+  taargetdis: 0
