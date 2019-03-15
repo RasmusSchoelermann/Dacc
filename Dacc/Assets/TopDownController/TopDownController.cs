@@ -43,18 +43,16 @@ public class TopDownController : NetworkBehaviour
 
     //UI
     //public Image pLock;
-    
+    public GameObject[] Units = new GameObject[5];
     public GameObject pBuyUi;
     //public Button pUnit;
     public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
     bool UIActive = false;
     //Pool
-    GameObject UPool = GameObject.FindGameObjectWithTag("Pool");
-    //Battle
-    public GameObject UnitsPrefab;
     public Vector3 enemyspawnposition;
     public Vector3 spawnposition;
     public Quaternion spawnRotation;
+    public GameObject UPool;
 
     //Player
     public int Level = 1;
@@ -68,31 +66,45 @@ public class TopDownController : NetworkBehaviour
     void Awake()
     {
         pBuyUi.SetActive(false);
-
         StartCoroutine(ExecuteAfterTime(4));
     }
 
-    public GameObject PullUnit(GameObject Unit)
+    public GameObject PullUnit()
     {
         int randChance;
-
+        GameObject UnitsPrefab;
         randChance = Random.Range(1, 100);
         if (Level == 1)
         {
             int randUID;
-
-            randUID = Random.Range(0, 1);
+            Random.seed = Random.Range(0, 1000);
+            randUID = Random.Range(0, 4);
             int uID = UPool.GetComponent<Pool>().Seltenheit[0].Units[randUID].gameObject.GetComponent<Unit>().id;
-            if(randChance <=50)
+            /*if(randChance <=50)
             {
                 UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
             }
             else
             {
                 UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
-            }
+            }*/
+            UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
+            return UnitsPrefab;
         }
-        return Unit;
+        return null;
+    }
+
+    void NewRound()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Units[i] = PullUnit();
+        }
+        pUnitButton.gameObject.SetActive(true);
+        pUnitButton1.gameObject.SetActive(true);
+        pUnitButton2.gameObject.SetActive(true);
+        pUnitButton3.gameObject.SetActive(true);
+        pUnitButton4.gameObject.SetActive(true);
     }
 
 
@@ -107,8 +119,10 @@ public class TopDownController : NetworkBehaviour
         anim.SetBool("IsWalking", walking);
 
         
+        
         if(Input.GetKeyDown("space"))
         {
+            NewRound();
             switch(UIActive)
             {
                 case false:
@@ -122,29 +136,6 @@ public class TopDownController : NetworkBehaviour
                 default:
                     break;
             }
-        }
-
-        if (Input.GetKeyDown("f"))
-        {
-
-            var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
-            unit.tag = "Unit";
-            unit.GetComponent<Unit>().Team = 0;
-            unit.GetComponent<BoardLocation>().Bx = 0;
-            unit.GetComponent<BoardLocation>().By = 6;
-            NetworkServer.Spawn(unit);
-            Feld[0, 6] = unit.GetComponent<Unit>();
-
-        }
-        if (Input.GetKeyDown("e"))
-        {
-
-            var unit = (GameObject)Instantiate(UnitsPrefab, enemyspawnposition, spawnRotation);
-            unit.tag = "Unit";
-            unit.GetComponent<BoardLocation>().Bx = 3;
-            unit.GetComponent<BoardLocation>().By = 3;
-            NetworkServer.Spawn(unit);
-            Feld[3, 3] = unit.GetComponent<Unit>();
         }
 
         if (Input.GetKey("y"))
@@ -296,7 +287,28 @@ public class TopDownController : NetworkBehaviour
         //Ray ray = Camera.pCam.ScreenPoint
     }
 
-    public void BuyUnit()
+    public void B1()
+    {
+        BuyUnit(0);
+    }
+    public void B2()
+    {
+        BuyUnit(1);
+    }
+    public void B3()
+    {
+        BuyUnit(2);
+    }
+    public void B4()
+    {
+        BuyUnit(3);
+    }
+    public void B5()
+    {
+        BuyUnit(4);
+    }
+
+    public void BuyUnit(int slot)
     {
         for (int Bankpos = 0; Bankpos < 8;)
         {
@@ -305,14 +317,19 @@ public class TopDownController : NetworkBehaviour
                 print("oh boy it begins again");
                 EventSystem.current.currentSelectedGameObject.SetActive(false);
                 spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
-                spawnposition.y = 4.7f;
-                var unit = (GameObject)Instantiate(UnitsPrefab, spawnposition, spawnRotation);
+                spawnposition.y = 4f;
+               // Quaternion test = new Quaternion();
+               // test.y = -90;
+                var unit = (GameObject)Instantiate(Units[slot], spawnposition, spawnRotation);
                 unit.tag = "Unit";
                 unit.GetComponent<Unit>().Team = PlayerTeam;
                 unit.GetComponent<BoardLocation>().Bx = Bankpos;
                 unit.GetComponent<BoardLocation>().By = -1;
                 NetworkServer.Spawn(unit);
                 Bank[Bankpos] = unit.GetComponent<Unit>();
+                var rotationVector = transform.rotation.eulerAngles;
+                rotationVector.y = -90;
+                unit.transform.rotation = Quaternion.Euler(rotationVector);
                 return;
             }
             else
@@ -332,7 +349,7 @@ public class TopDownController : NetworkBehaviour
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
-
+        UPool = GameObject.FindGameObjectWithTag("Pool");
         GameObject[] temp = GameObject.FindGameObjectsWithTag("Feld");
         foreach (GameObject g in temp)
         {
