@@ -1357,7 +1357,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 44a55d2b3fb0d9c40b002dcc4846798c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 69d2869e3675e244998d32992e5cff23, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2675,7 +2675,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 44a55d2b3fb0d9c40b002dcc4846798c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 67bba370d2a77e74098e7f1326b1fe32, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4345,7 +4345,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 44a55d2b3fb0d9c40b002dcc4846798c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e5409ce874a63dc448f897ef6019d7ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4395,7 +4395,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7898559821488608700}
-        m_MethodName: SellUnit
+        m_MethodName: SellSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

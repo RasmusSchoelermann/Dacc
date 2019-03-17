@@ -48,6 +48,7 @@ public class TopDownController : NetworkBehaviour
     public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
     public Button pMove, pbBank, pSell, pRoll, pLevel;
     bool UIActive = false;
+    bool SellSelected = false;
     //Pool
     public Vector3 enemyspawnposition;
     public Vector3 spawnposition;
@@ -108,7 +109,6 @@ public class TopDownController : NetworkBehaviour
         pUnitButton4.gameObject.SetActive(true);
     }
 
-
     void Update()
     {
         if(!isLocalPlayer)
@@ -119,107 +119,111 @@ public class TopDownController : NetworkBehaviour
         RaycastHit hit;
         anim.SetBool("IsWalking", walking);
 
-        
-        
-        if(Input.GetKeyDown("space"))
-        {
-            NewRound();
-            switch(UIActive)
+
+            if (Input.GetButtonDown("Fire1"))
             {
-                case false:
-                    pBuyUi.SetActive(true);
-                    UIActive = true;
-                    break;
-                case true:
-                    pBuyUi.SetActive(false);
-                    UIActive = false;
-                    break;
-                default:
-                    break;
+                SellUnit();
             }
-        }
-        if(Input.GetKeyDown("e"))
-        {
-            pSell.onClick.Invoke();
-        }
 
-        if (Input.GetKey("y"))
-        {
-            Board.GetComponent<Battle>().startbattle(Feld);
-        }
-        if (Input.GetKeyDown("q"))
-        {
-            MoveUnit();
-        }
-
-        if (Input.GetButtonDown("Fire2"))
-        {
-            if (UnitHit == false)
+            if (Input.GetKeyDown("space"))
             {
-                if (Physics.Raycast(ray, out hit, 1000))
+                NewRound();
+                switch (UIActive)
                 {
-                    CmdScrPlayerSetDestination(hit.point);
+                    case false:
+                        pBuyUi.SetActive(true);
+                        UIActive = true;
+                        break;
+                    case true:
+                        pBuyUi.SetActive(false);
+                        UIActive = false;
+                        break;
+                    default:
+                        break;
                 }
             }
-            else
+            if (Input.GetKeyDown("e"))
             {
-                if(Physics.Raycast(ray, out hit))
+                pSell.onClick.Invoke();
+            }
+
+            if (Input.GetKey("y"))
+            {
+                Board.GetComponent<Battle>().startbattle(Feld);
+            }
+            if (Input.GetKeyDown("q"))
+            {
+                MoveUnit();
+            }
+
+            if (Input.GetButtonDown("Fire2"))
+            {
+                if (UnitHit == false)
                 {
-                    if (hit.transform.tag == "Feld")
+                    if (Physics.Raycast(ray, out hit, 1000))
                     {
-                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-
-                        if (Feld[test.Bx,test.By] == null)
-                        {
-                            CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
-                            UnitHit = false;
-
-                            Feld[test.Bx, test.By] = selectedUnit;
-                            if (Py == -1)
-                            {
-                                Bank[Px] = null;
-                            }
-                            else
-                            {
-                                Feld[Px, Py] = null;
-
-                            }
-                            
-                            currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
-                            currentUnit.GetComponent<BoardLocation>().By = test.By;
-                        }
-                        else
-                            UnitHit = false;
-
-                    }
-                    else if(hit.transform.gameObject.tag == "Bank")
-                    {
-                        
-                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                        if (Bank[test.Bx] == null)
-                        {
-                            CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
-                            UnitHit = false;
-                            Bank[test.Bx] = selectedUnit;
-                            if (Py == -1)
-                            {
-                                Bank[Px] = null;
-                            }
-                            else
-                            {
-                                Feld[Px, Py] = null;
-
-                            }
-                            currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
-                            currentUnit.GetComponent<BoardLocation>().By = -1;
-                        }
-                        else
-                            UnitHit = false;
-                        
-                       
+                        CmdScrPlayerSetDestination(hit.point);
                     }
                 }
-            }
+                else
+                {
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.transform.tag == "Feld")
+                        {
+                            BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+
+                            if (Feld[test.Bx, test.By] == null)
+                            {
+                                CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
+                                UnitHit = false;
+
+                                Feld[test.Bx, test.By] = selectedUnit;
+                                if (Py == -1)
+                                {
+                                    Bank[Px] = null;
+                                }
+                                else
+                                {
+                                    Feld[Px, Py] = null;
+
+                                }
+
+                                currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
+                                currentUnit.GetComponent<BoardLocation>().By = test.By;
+                            }
+                            else
+                                UnitHit = false;
+
+                        }
+                        else if (hit.transform.gameObject.tag == "Bank")
+                        {
+
+                            BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                            if (Bank[test.Bx] == null)
+                            {
+                                CmdScrFigureSetDestination(hit.transform.gameObject.transform.position, currentUnit);
+                                UnitHit = false;
+                                Bank[test.Bx] = selectedUnit;
+                                if (Py == -1)
+                                {
+                                    Bank[Px] = null;
+                                }
+                                else
+                                {
+                                    Feld[Px, Py] = null;
+
+                                }
+                                currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
+                                currentUnit.GetComponent<BoardLocation>().By = -1;
+                            }
+                            else
+                                UnitHit = false;
+
+
+                        }
+                    }
+                }
         }
         if (navMeshAgent != null)
         {
@@ -359,26 +363,33 @@ public class TopDownController : NetworkBehaviour
         }
     }
 
+    public void SellSelect()
+    {
+        SellSelected = true;
+    }
+
     public void SellUnit()
     {
         print("Sold");
-        /*Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         bool UnitSelected = false;
-        if(EventSystem.current.currentSelectedGameObject.)
-        if (Physics.Raycast(ray, out hit))
+        if (SellSelected == true)
         {
-            if (hit.transform.gameObject.tag == "Unit")
+            if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                if (hit.transform.gameObject.tag == "Unit")
                 {
-                    currentUnit = hit.transform.gameObject;
-                    Destroy(currentUnit);
+                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                    {
+                        currentUnit = hit.transform.gameObject;
+                        Destroy(currentUnit);
+                    }
+                    else
+                        return;
                 }
-                else
-                    return;
             }
-        }*/
+        }
     }
 
     void bDown()

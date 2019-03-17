@@ -1078,6 +1078,7 @@ GameObject:
   - component: {fileID: 5984170358665864148}
   - component: {fileID: 5939261871113264052}
   - component: {fileID: 5529732533381818182}
+  - component: {fileID: 6060436015347213990}
   m_Layer: 0
   m_Name: HumanSpear
   m_TagString: Unit
@@ -1229,6 +1230,20 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &6060436015347213990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391901554020204124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df7ccb01e5f9aaa42b17177f027e4c0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 1
+  mat: {fileID: 2100000, guid: d00167a3bf66725439ef5da3c0bbe05a, type: 2}
 --- !u!1 &6391901554020204126
 GameObject:
   m_ObjectHideFlags: 0
