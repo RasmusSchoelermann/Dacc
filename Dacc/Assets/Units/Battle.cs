@@ -139,8 +139,17 @@ public class Battle : NetworkBehaviour
             }
            
         }
-       // StartCoroutine(Example(C));
-        // C++;
+        foreach (Unit u in EnemyUnits)
+        {
+            if (u != null)
+            {
+                u.BoardTeam = false;
+                u.startAi(this);
+            }
+
+        }
+         //StartCoroutine(Example(C));
+         //C++;
     }
 
     IEnumerator Example(int c)
@@ -197,7 +206,7 @@ public class Battle : NetworkBehaviour
                     {
                         Udis = Udis * -1;
                     }
-                    if (Mathf.RoundToInt(Udis) <= Unit.Range)
+                    if (Mathf.Floor(Udis) <= Unit.Range)
                     {
                         Unit.targetinrange = true;
                         return u;
@@ -222,8 +231,32 @@ public class Battle : NetworkBehaviour
         {
             foreach (Unit u in OwnUnits)
             {
+                if (u != null)
+                {
+                    float Udis = Mathf.Sqrt(Mathf.Pow(u.ArrayX - Unit.ArrayX, 2) + Mathf.Pow(u.ArrayY - Unit.ArrayY, 2));
+                    if (Udis < 0)
+                    {
+                        Udis = Udis * -1;
+                    }
+                    if (Mathf.Floor(Udis) <= Unit.Range)
+                    {
+                        Unit.targetinrange = true;
+                        return u;
+                    }
+                    else
+                    {
+                        float newdis = Udis;
+                        if (newdis < dis)
+                        {
+                            temp = u;
+                            dis = newdis;
+                        }
 
+                    }
+                }
             }
+            Unit.taargetdis = dis;
+            return temp;
         }
         return null;
     }
@@ -263,8 +296,30 @@ public class Battle : NetworkBehaviour
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
             EnemyUnits[0] = Creep.GetComponent<Unit>();
-            BattleBoard[0, 3] = Creep.GetComponent<Unit>();
-            
+            BattleBoard[3, 0] = Creep.GetComponent<Unit>();
+
+            newposition = testArray[0].Planes[4].gameObject.transform.position;
+            newposition.y = 4.7f;
+            Creep = (GameObject)Instantiate(UnitsPrefab, newposition, spawnRotation);
+            Creep.tag = "Unit";
+            Creep.GetComponent<BoardLocation>().Bx = 4;
+            Creep.GetComponent<BoardLocation>().By = 0;
+            Creep.GetComponent<Unit>().Team = -1;
+            NetworkServer.Spawn(Creep);
+            EnemyUnits[1] = Creep.GetComponent<Unit>();
+            BattleBoard[4, 0] = Creep.GetComponent<Unit>();
+
+            /*newposition = testArray[0].Planes[2].gameObject.transform.position;
+            newposition.y = 4.7f;
+            Creep = (GameObject)Instantiate(UnitsPrefab, newposition, spawnRotation);
+            Creep.tag = "Unit";
+            Creep.GetComponent<BoardLocation>().Bx = 2;
+            Creep.GetComponent<BoardLocation>().By = 0;
+            Creep.GetComponent<Unit>().Team = -1;
+            NetworkServer.Spawn(Creep);
+            EnemyUnits[2] = Creep.GetComponent<Unit>();
+            BattleBoard[2, 0] = Creep.GetComponent<Unit>();*/
+
         }
         //creeppower++;
     }
