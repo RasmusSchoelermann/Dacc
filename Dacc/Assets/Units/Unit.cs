@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Unit : MonoBehaviour
+public class Unit : NetworkBehaviour
 {
-    public int Team;
+    [SyncVar]public int Team;
     public int id;
 
     public int ArrayX;

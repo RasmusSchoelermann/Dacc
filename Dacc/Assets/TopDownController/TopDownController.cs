@@ -490,7 +490,7 @@ public class TopDownController : NetworkBehaviour
         
         var unit = (GameObject)Instantiate(UPool.GetComponent<Pool>().Seltenheit[0].Units[uID], spawnpositionb, spawnRotation);
         unit.tag = "Unit";
-        unit.GetComponent<Unit>().Team = PlayerTeam;
+        unit.GetComponent<Unit>().Team = team;
         unit.GetComponent<BoardLocation>().Bx = Bankpos;
         unit.GetComponent<BoardLocation>().By = -1;
 
