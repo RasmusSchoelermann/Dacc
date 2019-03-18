@@ -959,6 +959,7 @@ MonoBehaviour:
   BoardTeam: 0
   targetinrange: 0
   taargetdis: 0
+  movedistance: 3
 --- !u!114 &1012178129174132707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1056,6 +1057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 1
   mat: {fileID: 2100000, guid: 62b1b109ebfd33d4ab81c69ff22c6813, type: 2}
+  tex: {fileID: 2800000, guid: 0d7c719c7f5bbe64da3f99731d28db8f, type: 3}
 --- !u!1 &2702180644837760610
 GameObject:
   m_ObjectHideFlags: 0
