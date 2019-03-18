@@ -108,7 +108,7 @@ public class Battle : NetworkBehaviour
 
         }
        //roundmanager = GameObject.FindGameObjectWithTag("manager").GetComponent<RoundManager>();
-       //roundmanager.readycheck();
+       roundmanager.readycheck();
 
         /*if (round < 4 || round > 5 && round % 5 == 0)
         {
@@ -267,7 +267,7 @@ public class Battle : NetworkBehaviour
         return null;
     }
 
-    void endbattle()
+    public void endbattle()
     {
         inbattle = false;
         foreach (Unit U in BattleBoard)

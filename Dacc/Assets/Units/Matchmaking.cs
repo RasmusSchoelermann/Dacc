@@ -6,13 +6,13 @@ using UnityEngine.Networking;
 public class Matchmaking : NetworkBehaviour
 {
 
-    List<Battle> Boards;
-    List<Battle> AvaibleEnemy;
+    public List<Battle> Boards;
+    public List<Battle> AvaibleEnemy;
 
     // Start is called before the first frame update
     void Start()
     {
-        getrefs();
+        //getrefs();
     }
 
     // Update is called once per frame
@@ -21,21 +21,7 @@ public class Matchmaking : NetworkBehaviour
 
     }
 
-    public void getrefs()
-    {
-        GameObject[] temp = GameObject.FindGameObjectsWithTag("Feld");
-        int c = 0;
-        foreach (GameObject item in temp)
-        {
-            if(item.name.StartsWith("Board"))
-            {
-                Boards[c] = item.GetComponent<Battle>();
-                AvaibleEnemy[c] = item.GetComponent<Battle>();
-                c++;
-            }
-        }
-    }
-
+ 
     public void updatelist()
     {
         int temp = Boards.Count;

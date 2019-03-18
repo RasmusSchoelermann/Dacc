@@ -5,10 +5,10 @@ using UnityEngine.Networking;
 
 public class RoundManager : NetworkBehaviour
 {
-    List<Battle> Boards;
+    public List<GameObject> Boards;
     int ready = 0;
     Matchmaking matchmaking;
-    List<TopDownController> controllers;
+    public List<TopDownController> controllers;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +32,17 @@ public class RoundManager : NetworkBehaviour
             }
             
         }
+        if (Input.GetKeyDown("b"))
+        {
+            if (isServer == false)
+            {
+                return;
+            }
+            foreach (TopDownController c in controllers)
+            {
+                c.Board.GetComponent<Battle>().endbattle();
+            }
+        }
     }
 
     public void addcontroller(GameObject c)
@@ -41,16 +52,7 @@ public class RoundManager : NetworkBehaviour
 
     public void getrefs()
     {
-        GameObject[] temp = GameObject.FindGameObjectsWithTag("Feld");
-        int c = 0;
-        foreach (GameObject item in temp)
-        {
-            if (item.name.StartsWith("Board"))
-            {
-                Boards[c] = item.GetComponent<Battle>();
-                c++;
-            }
-        }
+      
         matchmaking = GameObject.FindGameObjectWithTag("Matchmaking").GetComponent<Matchmaking>();
     }
 
@@ -60,7 +62,7 @@ public class RoundManager : NetworkBehaviour
         int temp = Boards.Count;
         for (int i = 0; i < temp; i++)
         {
-            if (Boards[i].alive == false)
+            if (Boards[i].GetComponent<Battle>().alive == false)
             {
                 Boards.RemoveAt(i);
             }
