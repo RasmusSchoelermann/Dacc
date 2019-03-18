@@ -43,7 +43,7 @@ public class TopDownController : NetworkBehaviour
 
     //UI
     //public Image pLock;
-    public GameObject[] Units = new GameObject[5];
+    public int[] Units = new int[5];
     public GameObject pBuyUi;
     //public Button pUnit;
     public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
@@ -72,7 +72,7 @@ public class TopDownController : NetworkBehaviour
 
     }
 
-    public GameObject PullUnit()
+    public int PullUnit()
     {
         int randChance;
         GameObject UnitsPrefab;
@@ -91,18 +91,19 @@ public class TopDownController : NetworkBehaviour
             {
                 UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
             }*/
-            UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
-            print("Unit pulled");
-            return UnitsPrefab;
+            //CmdScrPullUnit(i,PlayerTeam,uID);
+
+            return uID;
         }
-        return null;
+        return 0;
+        
     }
 
     void NewRound()
     {
         for (int i = 0; i < 5; i++)
         {
-            Units[i] = PullUnit();
+           Units[i] = PullUnit();
         }
         pUnitButton.gameObject.SetActive(true);
         pUnitButton1.gameObject.SetActive(true);
@@ -484,9 +485,10 @@ public class TopDownController : NetworkBehaviour
     }
 
     [Command]
-    public void CmdScrbuyUnit(Vector3 spawnpositionb, GameObject Unit,int Bankpos,int team)
+    public void CmdScrbuyUnit(Vector3 spawnpositionb, int uID,int Bankpos,int team)
     {
-        var unit = (GameObject)Instantiate(Unit, spawnpositionb, spawnRotation);
+        
+        var unit = (GameObject)Instantiate(UPool.GetComponent<Pool>().Seltenheit[0].Units[uID], spawnpositionb, spawnRotation);
         unit.tag = "Unit";
         unit.GetComponent<Unit>().Team = PlayerTeam;
         unit.GetComponent<BoardLocation>().Bx = Bankpos;
@@ -511,5 +513,5 @@ public class TopDownController : NetworkBehaviour
         }
     }
 
-
+    
 }
