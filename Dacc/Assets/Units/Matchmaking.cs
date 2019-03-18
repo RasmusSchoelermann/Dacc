@@ -12,7 +12,7 @@ public class Matchmaking : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        getrefs();
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class Matchmaking : NetworkBehaviour
 
     }
 
-    void getrefs()
+    public void getrefs()
     {
         GameObject[] temp = GameObject.FindGameObjectsWithTag("Feld");
         int c = 0;
@@ -36,7 +36,7 @@ public class Matchmaking : NetworkBehaviour
         }
     }
 
-    void updatelist()
+    public void updatelist()
     {
         int temp = Boards.Count;
         for (int i = 0; i < temp; i++)
@@ -56,9 +56,9 @@ public class Matchmaking : NetworkBehaviour
         }
     }
 
-    void StartMatchmaking()// index wir d von länge abgezogen und ergebinis wird drauf addiert
+    public void StartMatchmaking()// index wir d von länge abgezogen und ergebinis wird drauf addiert
     {
-        Quaternion spawnRotation = new Quaternion;
+        Quaternion spawnRotation = new Quaternion();
         Random.InitState(Random.Range(0, 1000));
         List<Battle> tempAvaibleEnemy = AvaibleEnemy;
         //randUID = Random.Range(0, 4);
@@ -145,7 +145,7 @@ public class Matchmaking : NetworkBehaviour
 
         foreach (Battle item in Boards)
         {
-            item.startbattle();
+            item.battle();
         }
     }
     

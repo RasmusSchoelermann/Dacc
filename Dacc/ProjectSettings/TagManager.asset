@@ -8,6 +8,9 @@ TagManager:
   - Feld
   - Bank
   - Pool
+  - Matchmaking
+  - manager
+  - Roundmanager
   layers:
   - Default
   - TransparentFX
