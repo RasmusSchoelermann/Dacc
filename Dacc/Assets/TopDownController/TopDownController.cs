@@ -17,7 +17,6 @@ public class TopDownController : NetworkBehaviour
     public GameObject pooler;
     public NavMeshAgent navMeshAgent;
     public bool walking;
-    public NavMeshAgent Agent;
     public Camera pcam;
     [SyncVar] public int PlayerTeam = 0;
 
@@ -47,6 +46,7 @@ public class TopDownController : NetworkBehaviour
     public GameObject pBuyUi;
     //public Button pUnit;
     public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
+    public Button pMove, pbBank, pSell, pRoll, pLevel;
     bool UIActive = false;
     //Pool
     public Vector3 enemyspawnposition;
@@ -67,6 +67,7 @@ public class TopDownController : NetworkBehaviour
     {
         pBuyUi.SetActive(false);
         StartCoroutine(ExecuteAfterTime(4));
+
     }
 
     public GameObject PullUnit()
@@ -137,6 +138,10 @@ public class TopDownController : NetworkBehaviour
                     break;
             }
         }
+        if(Input.GetKeyDown("e"))
+        {
+            pSell.onClick.Invoke();
+        }
 
         if (Input.GetKey("y"))
         {
@@ -144,32 +149,7 @@ public class TopDownController : NetworkBehaviour
         }
         if (Input.GetKeyDown("q"))
         {
-            if(Physics.Raycast(ray,out hit))
-            {
-                if(hit.transform.gameObject.tag == "Unit")
-                {
-                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
-                    {
-                        currentUnit = hit.transform.gameObject;
-                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                        if (test.By == -1)
-                        {
-                            selectedUnit = Bank[test.Bx];
-                        }
-                        else
-                        {
-                            selectedUnit = Feld[test.Bx, test.By];
-
-                        }
-                        
-                        Px = test.Bx;
-                        Py = test.By;
-                        UnitHit = true;
-                    }
-                    else
-                        return;
-                }
-            }
+            MoveUnit();
         }
 
         if (Input.GetButtonDown("Fire2"))
@@ -325,6 +305,7 @@ public class TopDownController : NetworkBehaviour
                 unit.GetComponent<Unit>().Team = PlayerTeam;
                 unit.GetComponent<BoardLocation>().Bx = Bankpos;
                 unit.GetComponent<BoardLocation>().By = -1;
+
                 NetworkServer.Spawn(unit);
                 Bank[Bankpos] = unit.GetComponent<Unit>();
                 var rotationVector = transform.rotation.eulerAngles;
@@ -346,6 +327,69 @@ public class TopDownController : NetworkBehaviour
 
     }
 
+    public void MoveUnit()
+    {
+        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.gameObject.tag == "Unit")
+            {
+                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                {
+                    currentUnit = hit.transform.gameObject;
+                    BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                    if (test.By == -1)
+                    {
+                        selectedUnit = Bank[test.Bx];
+                    }
+                    else
+                    {
+                        selectedUnit = Feld[test.Bx, test.By];
+
+                    }
+
+                    Px = test.Bx;
+                    Py = test.By;
+                    UnitHit = true;
+                }
+                else
+                    return;
+            }
+        }
+    }
+
+    public void SellUnit()
+    {
+        print("Sold");
+        /*Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        bool UnitSelected = false;
+        if(EventSystem.current.currentSelectedGameObject.)
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.gameObject.tag == "Unit")
+            {
+                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                {
+                    currentUnit = hit.transform.gameObject;
+                    Destroy(currentUnit);
+                }
+                else
+                    return;
+            }
+        }*/
+    }
+
+    void bDown()
+    {
+
+    }
+
+    void bUp()
+    {
+
+    }
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
