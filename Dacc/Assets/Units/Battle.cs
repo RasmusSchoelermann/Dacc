@@ -10,9 +10,10 @@ public class Battle : NetworkBehaviour
     public Quaternion spawnRotation;
     int round = 0;
     bool inbattle = false;
+
     int creeppower = 0;
 
-
+    public bool alive;
     [System.Serializable]
     public class Planes2d
     {
@@ -25,10 +26,12 @@ public class Battle : NetworkBehaviour
 
     bool spawn = false;
     public Unit[,] BattleBoard = new Unit[8,8];
-    Unit[] OwnUnits = new Unit[10];
-    Unit[] EnemyUnits = new Unit[10];
+    public Unit[] OwnUnits = new Unit[10];
+    public Unit[] EnemyUnits = new Unit[10];
     Unit[,] BoardSave = new Unit[8, 8];
     int C = 0;
+
+    public RoundManager roundmanager;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +42,7 @@ public class Battle : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isServer)
+       /* if(!isServer)
         {
             return;
         }
@@ -48,7 +51,7 @@ public class Battle : NetworkBehaviour
         if(Input.GetKeyDown("b"))
         {
             endbattle();
-        }/*
+        }
 
         if (Input.GetKeyDown("f"))
         {
@@ -104,8 +107,10 @@ public class Battle : NetworkBehaviour
             }
 
         }
+       //roundmanager = GameObject.FindGameObjectWithTag("manager").GetComponent<RoundManager>();
+       roundmanager.readycheck();
 
-        if(round < 4 || round > 5 && round % 5 == 0)
+        /*if (round < 4 || round > 5 && round % 5 == 0)
         {
             spawncreeps();
         }
@@ -114,7 +119,7 @@ public class Battle : NetworkBehaviour
             // FindEnemy
         }
     
-        foreach (Unit U in BattleBoard)
+         foreach (Unit U in BattleBoard)
         {
             if (U != null)
             {
@@ -123,11 +128,12 @@ public class Battle : NetworkBehaviour
                 //U.startAi(this, PlanesArray);
             }
 
-        }
-        battle();
+        }*/
+
+        //battle();
     }
 
-    void battle()
+    public void battle()
     {
         
         foreach  (Unit u in OwnUnits)
@@ -261,7 +267,7 @@ public class Battle : NetworkBehaviour
         return null;
     }
 
-    void endbattle()
+    public void endbattle()
     {
         inbattle = false;
         foreach (Unit U in BattleBoard)

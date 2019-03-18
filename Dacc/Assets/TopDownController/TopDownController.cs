@@ -30,8 +30,9 @@ public class TopDownController : NetworkBehaviour
     public Vector2 panLimit;
 
     public bool UnitHit = false;
+    public RoundManager roundmanager;
 
-    Unit[,] Feld = new Unit[8,8];
+    public Unit[,] Feld = new Unit[8,8];
     Unit[] Bank = new Unit[8];
    
         
@@ -91,6 +92,7 @@ public class TopDownController : NetworkBehaviour
                 UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
             }*/
             UnitsPrefab = UPool.GetComponent<Pool>().Seltenheit[0].Units[uID];
+            print("Unit pulled");
             return UnitsPrefab;
         }
         return null;
@@ -302,19 +304,9 @@ public class TopDownController : NetworkBehaviour
                 EventSystem.current.currentSelectedGameObject.SetActive(false);
                 spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
                 spawnposition.y = 4f;
-               // Quaternion test = new Quaternion();
-               // test.y = -90;
-                var unit = (GameObject)Instantiate(Units[slot], spawnposition, spawnRotation);
-                unit.tag = "Unit";
-                unit.GetComponent<Unit>().Team = PlayerTeam;
-                unit.GetComponent<BoardLocation>().Bx = Bankpos;
-                unit.GetComponent<BoardLocation>().By = -1;
-
-                NetworkServer.Spawn(unit);
-                Bank[Bankpos] = unit.GetComponent<Unit>();
-                var rotationVector = transform.rotation.eulerAngles;
-                rotationVector.y = -90;
-                unit.transform.rotation = Quaternion.Euler(rotationVector);
+                // Quaternion test = new Quaternion();
+                // test.y = -90;
+                CmdScrbuyUnit(spawnposition ,Units[slot] ,Bankpos,PlayerTeam);
                 return;
             }
             else
@@ -430,6 +422,12 @@ public class TopDownController : NetworkBehaviour
             }
             
         }
+        roundmanager = GameObject.FindGameObjectWithTag("Roundmanager").GetComponent<RoundManager>();
+        if (isServer == true)
+        {
+            roundmanager.getrefs();
+        }
+        CmdScrtest(gameObject);
     }
 
     [Command]
@@ -462,22 +460,56 @@ public class TopDownController : NetworkBehaviour
     }
 
     [Command]
-    public void CmdScrTeamSetDestination(int team)
+    public void CmdScrsetTeam(int team)
     {
         PlayerTeam = team;
-        RpcScrTeamSetDestination(team);
+        RpcScrsetTeam(team);
     }
 
     [ClientRpc]
-    public void RpcScrTeamSetDestination(int team)
+    public void RpcScrsetTeam(int team)
     {
         PlayerTeam = team;
     }
     [Command]
-    public void CmdScrTeamPrintSetDestination(int team)
+    public void CmdScrTeamPrint(int team)
     {
         print(team);
     }
-    
+
+    [Command]
+    public void CmdScrtest(GameObject c)
+    {
+        roundmanager.addcontroller(c);
+    }
+
+    [Command]
+    public void CmdScrbuyUnit(Vector3 spawnpositionb, GameObject Unit,int Bankpos,int team)
+    {
+        var unit = (GameObject)Instantiate(Unit, spawnpositionb, spawnRotation);
+        unit.tag = "Unit";
+        unit.GetComponent<Unit>().Team = PlayerTeam;
+        unit.GetComponent<BoardLocation>().Bx = Bankpos;
+        unit.GetComponent<BoardLocation>().By = -1;
+
+        NetworkServer.Spawn(unit);
+        
+        var rotationVector = transform.rotation.eulerAngles;
+        rotationVector.y = -90;
+        unit.transform.rotation = Quaternion.Euler(rotationVector);
+
+        RpcScrBuyUnit(team,unit,Bankpos);
+
+
+    }
+    [ClientRpc]
+    public void RpcScrBuyUnit(int team,GameObject unit,int Bankpos)
+    {
+        if(PlayerTeam == team)
+        {
+            Bank[Bankpos] = unit.GetComponent<Unit>();
+        }
+    }
+
 
 }
