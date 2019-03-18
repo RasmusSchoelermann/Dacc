@@ -10,6 +10,7 @@ public class Battle : NetworkBehaviour
     public Quaternion spawnRotation;
     int round = 0;
     bool inbattle = false;
+    public bool alive;
     int creeppower = 0;
 
 
@@ -25,8 +26,8 @@ public class Battle : NetworkBehaviour
 
     bool spawn = false;
     public Unit[,] BattleBoard = new Unit[8,8];
-    Unit[] OwnUnits = new Unit[10];
-    Unit[] EnemyUnits = new Unit[10];
+    public Unit[] OwnUnits = new Unit[10];
+    public Unit[] EnemyUnits = new Unit[10];
     Unit[,] BoardSave = new Unit[8, 8];
     int C = 0;
 
