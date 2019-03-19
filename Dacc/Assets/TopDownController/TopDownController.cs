@@ -193,11 +193,8 @@ public class TopDownController : NetworkBehaviour
 
                                 }
 
-                                currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
-                                currentUnit.GetComponent<BoardLocation>().By = test.By;
-                                selectedUnit.ArrayX = test.Bx;
-                                selectedUnit.ArrayY = test.By;
-                                 CmdScraddUnit(Board, currentUnit, currentUnit.GetComponent<Unit>().ArrayX, currentUnit.GetComponent<Unit>().ArrayY);
+                                
+                                 CmdScraddUnit(Board, currentUnit, test.Bx, test.By,Px,Py);
 
 
                         }
@@ -521,9 +518,9 @@ public class TopDownController : NetworkBehaviour
 
 
     [Command]
-    public void CmdScraddUnit(GameObject board,GameObject item, int X, int Y)
+    public void CmdScraddUnit(GameObject board,GameObject item, int X, int Y,int px,int py)
     {
-        board.GetComponent<Battle>().CmdScraddUnit(item, X, Y);
+        board.GetComponent<Battle>().CmdScraddUnit(item, X, Y,px,py);
 
     }
 

@@ -40,13 +40,14 @@ public class Matchmaking : NetworkBehaviour
                 AvaibleEnemy.RemoveAt(i);
             }
         }
+
     }
 
     public void StartMatchmaking()// index wir d von länge abgezogen und ergebinis wird drauf addiert
     {
         Quaternion spawnRotation = new Quaternion();
         Random.InitState(Random.Range(0, 1000));
-        List<Battle> tempAvaibleEnemy = AvaibleEnemy;
+        List<Battle> tempAvaibleEnemy = new List<Battle>(AvaibleEnemy); 
         //randUID = Random.Range(0, 4);
         foreach (Battle item in Boards)
         {
@@ -65,24 +66,28 @@ public class Matchmaking : NetworkBehaviour
                     {
                         GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
                         NetworkServer.Spawn(temp);
+                        tempEnemyUnits[c] = temp.GetComponent<Unit>();
                         tempEnemyUnits[c].ArrayX = U.GetComponent<BoardLocation>().Bx;
                         tempEnemyUnits[c].ArrayY = U.GetComponent<BoardLocation>().By;
                         //BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
                         temp.GetComponent<Unit>().Team = U.Team;
                         temp.GetComponent<Unit>().BoardTeam = false;
-                        tempEnemyUnits[c] = temp.GetComponent<Unit>();
+                        //tempEnemyUnits[c] = temp.GetComponent<Unit>();
                         c++;
                     }
                 }
 
                 foreach (Unit U in tempEnemyUnits)
                 {
-
-                    U.ArrayX = 7 - U.ArrayX;
-                    U.ArrayY = 7 - U.ArrayY;
-                    Vector3 newposition = item.testArray[U.ArrayX].Planes[U.ArrayY].gameObject.transform.position;
-                    newposition.y = 4.7f;
+                    if (U != null)
+                    {
+                        U.ArrayX = 7 - U.ArrayX;
+                        U.ArrayY = 7 - U.ArrayY;
+                    Vector3 newposition = item.testArray[U.ArrayY].Planes[U.ArrayX].gameObject.transform.position;
+                    newposition.y = 4.4f;
                     U.transform.position = newposition;
+                        item.BattleBoard[U.ArrayX, U.ArrayY] = U;
+                    }
 
                 }
 
@@ -103,24 +108,29 @@ public class Matchmaking : NetworkBehaviour
                     {
                         GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
                         NetworkServer.Spawn(temp);
+                        tempEnemyUnits[c] = temp.GetComponent<Unit>();
                         tempEnemyUnits[c].ArrayX = U.GetComponent<BoardLocation>().Bx;
                         tempEnemyUnits[c].ArrayY = U.GetComponent<BoardLocation>().By;
                         //BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
                         temp.GetComponent<Unit>().Team = U.Team;
                         temp.GetComponent<Unit>().BoardTeam = false;
-                        tempEnemyUnits[c] = temp.GetComponent<Unit>();
+                        //tempEnemyUnits[c] = temp.GetComponent<Unit>();
                         c++;
                     }
                 }
 
                 foreach  (Unit U in tempEnemyUnits)
                 {
-                    
-                    U.ArrayX = 7 - U.ArrayX;
-                    U.ArrayY = 7 - U.ArrayY;
-                    Vector3 newposition = item.testArray[U.ArrayX].Planes[U.ArrayY].gameObject.transform.position;
-                    newposition.y = 4.7f;
-                    U.transform.position = newposition;
+                    if (U != null)
+                    {
+                        U.ArrayX = 7 - U.ArrayX;
+                        U.ArrayY = 7 - U.ArrayY;
+                        Vector3 newposition = item.testArray[U.ArrayY].Planes[U.ArrayX].gameObject.transform.position;
+                        newposition.y = 4.4f;
+                        U.transform.position = newposition;
+                        item.BattleBoard[U.ArrayX, U.ArrayY] = U;
+
+                    }
 
                 }
 
@@ -131,7 +141,7 @@ public class Matchmaking : NetworkBehaviour
 
         foreach (Battle item in Boards)
         {
-            item.battle();
+           item.battle();
         }
     }
     

@@ -136,10 +136,33 @@ public class Battle : NetworkBehaviour
    
 
     [Command]
-    public void CmdScraddUnit(GameObject item,int X,int Y)
+    public void CmdScraddUnit(GameObject item,int X,int Y,int px,int py)
     {
-       BoardSave[X, Y] = item.GetComponent<Unit>();
-    
+        if(Y == -1)
+        {
+           
+            BoardSave[px, py] = null;
+            item.GetComponent<BoardLocation>().Bx = X;
+            item.GetComponent<BoardLocation>().By = Y;
+        }
+        else if(py == -1)
+        {
+
+            BoardSave[X, Y] = item.GetComponent<Unit>();
+            item.GetComponent<BoardLocation>().Bx = X;
+            item.GetComponent<BoardLocation>().By = Y;
+            //selectedUnit.ArrayX = test.Bx;
+            //selectedUnit.ArrayY = test.By;
+        }
+        else
+        {
+            BoardSave[X, Y] = item.GetComponent<Unit>();
+            BoardSave[px, py] = null;
+            item.GetComponent<BoardLocation>().Bx = X;
+            item.GetComponent<BoardLocation>().By = Y;
+        }
+       
+
     }
 
     public void battle()

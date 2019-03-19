@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class BoardLocation : MonoBehaviour
+public class BoardLocation : NetworkBehaviour
 {
-    public int Bx = 0;
-    public int By = 0;
+    [SyncVar]public int Bx = 0;
+    [SyncVar] public int By = 0;
 }
    
