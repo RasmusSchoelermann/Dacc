@@ -3225,7 +3225,7 @@ GameObject:
   - component: {fileID: 3838659122325731144}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3276,12 +3276,8 @@ MonoBehaviour:
   maxY: 20
   panLimit: {x: 15, y: 15}
   UnitHit: 0
-  Units:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  roundmanager: {fileID: 0}
+  Units: 0000000000000000000000000000000000000000
   pBuyUi: {fileID: 2268124146959699240}
   pUnitButton: {fileID: 4873911588355607155}
   pUnitButton1: {fileID: 6747155553881998888}

@@ -37,7 +37,7 @@ public class TopDownController : NetworkBehaviour
    
         
     GameObject currentUnit;
-    Unit selectedUnit;
+     Unit selectedUnit;
     int Px;
     int Py;
 
@@ -149,12 +149,13 @@ public class TopDownController : NetworkBehaviour
             {
                 pSell.onClick.Invoke();
             }
+        
 
-            if (Input.GetKey("y"))
-            {
-                Board.GetComponent<Battle>().startbattle(Feld);
-            }
-            if (Input.GetKeyDown("q"))
+        /*if (Input.GetKey("y"))
+        {
+            //Board.GetComponent<Battle>().startbattle(Feld);
+        }*/
+        if (Input.GetKeyDown("q"))
             {
                 MoveUnit();
             }
@@ -194,7 +195,12 @@ public class TopDownController : NetworkBehaviour
 
                                 currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                                 currentUnit.GetComponent<BoardLocation>().By = test.By;
-                            }
+                                selectedUnit.ArrayX = test.Bx;
+                                selectedUnit.ArrayY = test.By;
+                                 CmdScraddUnit(Board, currentUnit, currentUnit.GetComponent<Unit>().ArrayX, currentUnit.GetComponent<Unit>().ArrayY);
+
+
+                        }
                             else
                                 UnitHit = false;
 
@@ -513,5 +519,12 @@ public class TopDownController : NetworkBehaviour
         }
     }
 
-    
+
+    [Command]
+    public void CmdScraddUnit(GameObject board,GameObject item, int X, int Y)
+    {
+        board.GetComponent<Battle>().CmdScraddUnit(item, X, Y);
+
+    }
+
 }

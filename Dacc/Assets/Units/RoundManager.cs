@@ -7,8 +7,10 @@ public class RoundManager : NetworkBehaviour
 {
     public List<GameObject> Boards;
     int ready = 0;
+    int setupready = 0;
     Matchmaking matchmaking;
     public List<TopDownController> controllers;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,9 +28,15 @@ public class RoundManager : NetworkBehaviour
             {
                 return;
             }
-            foreach (TopDownController c in controllers)
+            ready = 0;
+            setupready = 0;
+           
+            foreach (GameObject c in Boards)
             {
-                c.Board.GetComponent<Battle>().startbattle(c.Feld);
+                c.GetComponent<Battle>().startbattle();
+                
+               
+               
             }
             
         }
@@ -43,11 +51,21 @@ public class RoundManager : NetworkBehaviour
                 c.Board.GetComponent<Battle>().endbattle();
             }
         }
-    }
+       
+
+        }
 
     public void addcontroller(GameObject c)
     {
-        controllers.Add(c.GetComponent<TopDownController>());
+        if (controllers.Contains(c.GetComponent<TopDownController>()))
+        {
+
+        }
+        else
+        {
+            controllers.Add(c.GetComponent<TopDownController>());
+        }
+       
     }
 
     public void getrefs()
@@ -74,4 +92,6 @@ public class RoundManager : NetworkBehaviour
             matchmaking.StartMatchmaking();
         }
     }
+
+  
 }

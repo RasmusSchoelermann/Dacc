@@ -79,7 +79,7 @@ public class Battle : NetworkBehaviour
         
     }
 
-    public void startbattle(Unit[,] boardref)
+    public void startbattle()
     {
         
         C = 0;
@@ -90,7 +90,7 @@ public class Battle : NetworkBehaviour
         }
         inbattle = true;
         // round++;
-        BoardSave = boardref;
+        
         int c =0;
         foreach (Unit U in BoardSave)
         {
@@ -131,6 +131,15 @@ public class Battle : NetworkBehaviour
         }*/
 
         //battle();
+    }
+
+   
+
+    [Command]
+    public void CmdScraddUnit(GameObject item,int X,int Y)
+    {
+       BoardSave[X, Y] = item.GetComponent<Unit>();
+    
     }
 
     public void battle()

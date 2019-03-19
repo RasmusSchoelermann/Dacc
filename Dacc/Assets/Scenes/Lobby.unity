@@ -209,7 +209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11475086, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 3}
       propertyPath: m_SpawnPrefabs.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 11475086, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 3}
       propertyPath: m_OfflineScene
@@ -272,6 +272,11 @@ PrefabInstance:
       propertyPath: m_SpawnPrefabs.Array.data[4]
       value: 
       objectReference: {fileID: 8673791714681665686, guid: b2627d1e598569c41a40812770a866ff,
+        type: 3}
+    - target: {fileID: 11475086, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 3}
+      propertyPath: m_SpawnPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 7782373465955970261, guid: ffa709251abb2104f8f0e191580fdfcd,
         type: 3}
     - target: {fileID: 11405198, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 3}
       propertyPath: m_Color.r
