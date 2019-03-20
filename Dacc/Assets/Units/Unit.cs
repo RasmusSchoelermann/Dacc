@@ -623,7 +623,7 @@ public class Unit : NetworkBehaviour
         }
         else
         {
-            Target.HandleDamage(Damage);
+            Target.HandleDamage(Damage,this);
         }
         yield return new WaitForSeconds(Attackspeed);
 
@@ -649,16 +649,21 @@ public class Unit : NetworkBehaviour
           
     }
 
-    void HandleDamage(int Damage) // Handle Damage adn detroy self if 0 hp
+    void HandleDamage(int Damage,Unit Causer) // Handle Damage adn detroy self if 0 hp
     {
         Hp = Hp - Damage;
         if(Hp <= 0)
         {
+            Causer.dead();
             Destroy(this.gameObject);
+           
         }
     }
-       
-       
+
+    void dead()
+    {
+        test.checkboard();
+    }
        
 }
 

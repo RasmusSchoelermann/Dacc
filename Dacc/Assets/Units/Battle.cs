@@ -161,6 +161,8 @@ public class Battle : NetworkBehaviour
             item.GetComponent<BoardLocation>().Bx = X;
             item.GetComponent<BoardLocation>().By = Y;
         }
+        item.GetComponent<Unit>().ArrayX = X;
+        item.GetComponent<Unit>().ArrayY = Y;
        
 
     }
@@ -299,6 +301,22 @@ public class Battle : NetworkBehaviour
         return null;
     }
 
+    public void checkboard()
+    {
+        bool done = true;
+        foreach (Unit item in EnemyUnits)
+        {
+            if(item == null)
+            {
+                done = false;
+            }
+        }
+        if(done == true)
+        {
+            roundmanager.battlecheck();
+        }
+    }
+
     public void endbattle()
     {
         inbattle = false;
@@ -321,7 +339,7 @@ public class Battle : NetworkBehaviour
         }
     }
 
-    void spawncreeps()
+    public void spawncreeps()
     {
         if(creeppower == 0)
         {
@@ -331,6 +349,8 @@ public class Battle : NetworkBehaviour
             Creep.tag = "Unit";
             Creep.GetComponent<BoardLocation>().Bx = 3;
             Creep.GetComponent<BoardLocation>().By = 0;
+            Creep.GetComponent<Unit>().ArrayX = 3;
+            Creep.GetComponent<Unit>().ArrayY = 0;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
             EnemyUnits[0] = Creep.GetComponent<Unit>();
@@ -342,6 +362,8 @@ public class Battle : NetworkBehaviour
             Creep.tag = "Unit";
             Creep.GetComponent<BoardLocation>().Bx = 4;
             Creep.GetComponent<BoardLocation>().By = 0;
+            Creep.GetComponent<Unit>().ArrayX = 4;
+            Creep.GetComponent<Unit>().ArrayY = 0;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
             EnemyUnits[1] = Creep.GetComponent<Unit>();
@@ -360,5 +382,6 @@ public class Battle : NetworkBehaviour
 
         }
         //creeppower++;
+        startbattle();
     }
 }
