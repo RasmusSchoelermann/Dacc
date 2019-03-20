@@ -30,6 +30,8 @@ public class Matchmaking : NetworkBehaviour
             if (Boards[i].alive == false)
             {
                 Boards.RemoveAt(i);
+                i--;
+                temp = Boards.Count;
             }
         }
         temp = AvaibleEnemy.Count;
@@ -38,6 +40,8 @@ public class Matchmaking : NetworkBehaviour
             if (AvaibleEnemy[i].alive == false)
             {
                 AvaibleEnemy.RemoveAt(i);
+                i--;
+                temp = AvaibleEnemy.Count;
             }
         }
 

@@ -737,7 +737,7 @@ PrefabInstance:
     - target: {fileID: 6118140062615375555, guid: a98544e91f1395e4d8bc486d33ba0a09,
         type: 3}
       propertyPath: alive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6118140062615375555, guid: a98544e91f1395e4d8bc486d33ba0a09,
         type: 3}
@@ -1124,6 +1124,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6399508182259092318, guid: a98544e91f1395e4d8bc486d33ba0a09,
+        type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6118140062615375555, guid: a98544e91f1395e4d8bc486d33ba0a09,
         type: 3}
       propertyPath: testArray.Array.size
@@ -1189,11 +1194,6 @@ PrefabInstance:
         type: 3}
       propertyPath: team
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6399508182259092318, guid: a98544e91f1395e4d8bc486d33ba0a09,
-        type: 3}
-      propertyPath: m_DynamicOccludee
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3234778884196843295, guid: a98544e91f1395e4d8bc486d33ba0a09,
         type: 3}
