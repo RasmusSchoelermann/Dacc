@@ -96,14 +96,23 @@ public class Battle : NetworkBehaviour
         {
             if (U != null)
             {
-                GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
-                NetworkServer.Spawn(temp);
-                U.ArrayX = U.GetComponent<BoardLocation>().Bx;
-                U.ArrayY = U.GetComponent<BoardLocation>().By;
-                BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
-                OwnUnits[c] = temp.GetComponent<Unit>();
-                U.gameObject.SetActive(false);
-                c++;
+                if(c >= 10)
+                {
+                    U.gameObject.SetActive(false);
+                    //STOP(Move unit to bank)
+                }
+                else
+                {
+                    GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
+                    NetworkServer.Spawn(temp);
+                    U.ArrayX = U.GetComponent<BoardLocation>().Bx;
+                    U.ArrayY = U.GetComponent<BoardLocation>().By;
+                    BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
+                    OwnUnits[c] = temp.GetComponent<Unit>();
+                    U.gameObject.SetActive(false);
+                    c++;
+                }
+                
             }
 
         }
@@ -165,6 +174,11 @@ public class Battle : NetworkBehaviour
         item.GetComponent<Unit>().ArrayY = Y;
        
 
+    }
+    [Command]
+    public void CmdScrRemoveUnit(int px, int py)
+    {
+            BoardSave[px, py] = null;
     }
 
     public void battle()
@@ -303,15 +317,15 @@ public class Battle : NetworkBehaviour
 
     public void checkboard()
     {
-        bool done = true;
+        int aliveunits = -1;
         foreach (Unit item in EnemyUnits)
         {
-            if(item == null)
+            if(item != null)
             {
-                done = false;
+                aliveunits++;
             }
         }
-        if(done == true)
+        if(aliveunits == 0)
         {
             roundmanager.battlecheck();
         }

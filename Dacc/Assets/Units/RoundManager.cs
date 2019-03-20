@@ -11,7 +11,7 @@ public class RoundManager : NetworkBehaviour
     Matchmaking matchmaking;
     public List<TopDownController> controllers;
     bool battle = true;
-    float preparetime = 8;
+    float preparetime = 30;
     float battletime = 60;
     int battleready = 0;
     int round = 1;
