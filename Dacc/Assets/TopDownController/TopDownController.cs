@@ -50,9 +50,11 @@ public class TopDownController : NetworkBehaviour
     public Button pMove, pbBank, pSell, pRoll, pLevel;
     bool UIActive = false;
     bool SellSelected = false;
+    bool MoveToBankSelected = false;
     //Pool
     public Vector3 enemyspawnposition;
     public Vector3 spawnposition;
+    public Vector3 moveposition;
     public Quaternion spawnRotation;
     public GameObject UPool;
 
@@ -122,10 +124,22 @@ public class TopDownController : NetworkBehaviour
         RaycastHit hit;
         anim.SetBool("IsWalking", walking);
 
+        if(Input.GetKeyDown("w"))
+        {
+            MoveToBank();
+        }
 
             if (Input.GetButtonDown("Fire1"))
             {
-                SellUnit();
+                if(SellSelected == true)
+                {
+                    SellUnit();
+                }
+                else if(MoveToBankSelected == true)
+                {
+                    MoveToBank();
+                }
+               
             }
 
             if (Input.GetKeyDown("space"))
@@ -359,6 +373,55 @@ public class TopDownController : NetworkBehaviour
         }
     }
 
+    public void MoveSelectedBank()
+    {
+       MoveToBankSelected = true;
+    }
+
+    public void MoveToBank()
+    {
+        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.gameObject.tag == "Unit")
+            {
+                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                {
+                    for (int Bankpos = 0; Bankpos < 8;)
+                    {
+                        if (Bank[Bankpos] == null)
+                        {
+                            BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                            selectedUnit = Feld[test.Bx, test.By];
+                            Px = test.Bx;
+                            Py = test.By;
+                            UnitHit = true;
+
+                            moveposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                            moveposition.y = 4f;
+                            CmdScrFigureSetDestination(moveposition, hit.transform.gameObject);
+                            UnitHit = false;
+                            Bank[Bankpos] = selectedUnit;
+                            Feld[Px, Py] = null;
+                            CmdScraddUnit(Board, hit.transform.gameObject, Bankpos, -1, Px, Py);
+                            MoveToBankSelected = false;
+                            return;
+                        }
+                        else
+                        {
+                            Bankpos++;
+                            if (Bankpos == 8)
+                            {
+                                print("Kein Platz");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void SellSelect()
     {
         SellSelected = true;
@@ -380,6 +443,7 @@ public class TopDownController : NetworkBehaviour
                     {
                         currentUnit = hit.transform.gameObject;
                         Destroy(currentUnit);
+                        SellSelected = false;
                     }
                     else
                         return;
@@ -388,15 +452,6 @@ public class TopDownController : NetworkBehaviour
         }
     }
 
-    void bDown()
-    {
-
-    }
-
-    void bUp()
-    {
-
-    }
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
@@ -515,7 +570,6 @@ public class TopDownController : NetworkBehaviour
             Bank[Bankpos] = unit.GetComponent<Unit>();
         }
     }
-
 
     [Command]
     public void CmdScraddUnit(GameObject board,GameObject item, int X, int Y,int px,int py)
