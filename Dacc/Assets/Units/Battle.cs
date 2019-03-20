@@ -166,6 +166,11 @@ public class Battle : NetworkBehaviour
        
 
     }
+    [Command]
+    public void CmdScrRemoveUnit(int px, int py)
+    {
+            BoardSave[px, py] = null;
+    }
 
     public void battle()
     {
@@ -303,15 +308,15 @@ public class Battle : NetworkBehaviour
 
     public void checkboard()
     {
-        bool done = true;
+        int aliveunits = -1;
         foreach (Unit item in EnemyUnits)
         {
-            if(item == null)
+            if(item != null)
             {
-                done = false;
+                aliveunits++;
             }
         }
-        if(done == true)
+        if(aliveunits == 0)
         {
             roundmanager.battlecheck();
         }
