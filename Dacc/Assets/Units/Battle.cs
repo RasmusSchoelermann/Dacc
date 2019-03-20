@@ -96,14 +96,23 @@ public class Battle : NetworkBehaviour
         {
             if (U != null)
             {
-                GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
-                NetworkServer.Spawn(temp);
-                U.ArrayX = U.GetComponent<BoardLocation>().Bx;
-                U.ArrayY = U.GetComponent<BoardLocation>().By;
-                BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
-                OwnUnits[c] = temp.GetComponent<Unit>();
-                U.gameObject.SetActive(false);
-                c++;
+                if(c >= 10)
+                {
+                    U.gameObject.SetActive(false);
+                    //STOP(Move unit to bank)
+                }
+                else
+                {
+                    GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
+                    NetworkServer.Spawn(temp);
+                    U.ArrayX = U.GetComponent<BoardLocation>().Bx;
+                    U.ArrayY = U.GetComponent<BoardLocation>().By;
+                    BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
+                    OwnUnits[c] = temp.GetComponent<Unit>();
+                    U.gameObject.SetActive(false);
+                    c++;
+                }
+                
             }
 
         }
