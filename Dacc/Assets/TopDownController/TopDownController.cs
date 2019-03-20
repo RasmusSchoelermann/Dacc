@@ -236,6 +236,7 @@ public class TopDownController : NetworkBehaviour
                                 }
                                 currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                                 currentUnit.GetComponent<BoardLocation>().By = -1;
+                                CmdScraddUnit(Board, currentUnit, test.Bx, test.By, Px, Py);
                             }
                             else
                                 UnitHit = false;
@@ -393,6 +394,8 @@ public class TopDownController : NetworkBehaviour
                         if (Bank[Bankpos] == null)
                         {
                             BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                            currentUnit.GetComponent<BoardLocation>().Bx = Bankpos;
+                            currentUnit.GetComponent<BoardLocation>().By = -1;
                             selectedUnit = Feld[test.Bx, test.By];
                             Px = test.Bx;
                             Py = test.By;
