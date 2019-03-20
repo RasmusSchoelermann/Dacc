@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Unit : NetworkBehaviour
 {
@@ -20,6 +21,8 @@ public class Unit : NetworkBehaviour
     public bool targetinrange;
     public float taargetdis;
     public int movedistance = 3;
+    public Sprite UIimg;
+    bool dead = false;
     Battle test;
 
     // Start is called before the first frame update
@@ -652,17 +655,18 @@ public class Unit : NetworkBehaviour
     void HandleDamage(int Damage,Unit Causer) // Handle Damage adn detroy self if 0 hp
     {
         Hp = Hp - Damage;
-        if(Hp <= 0)
+        if (Hp <= 0)
         {
-            Causer.dead();
-            Destroy(this.gameObject);
-           
-        }
-    }
 
-    void dead()
-    {
-        test.checkboard();
+            if (dead == false)
+            {
+                dead = true;
+                test.checkboard();
+                Destroy(this.gameObject);
+            }
+
+
+        }
     }
        
 }

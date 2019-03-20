@@ -627,6 +627,7 @@ MonoBehaviour:
   targetinrange: 0
   taargetdis: 0
   movedistance: 3
+  UIimg: {fileID: 21300000, guid: 8d8aabae13136d843aeb4d8c423871bb, type: 3}
 --- !u!114 &969667985945661279
 MonoBehaviour:
   m_ObjectHideFlags: 0

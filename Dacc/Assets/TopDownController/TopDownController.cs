@@ -82,7 +82,7 @@ public class TopDownController : NetworkBehaviour
         if (Level == 1)
         {
             int randUID;
-            Random.seed = Random.Range(0, 1000);
+            Random.InitState(Random.Range(0, 9999));
             randUID = Random.Range(0, 4);
             int uID = UPool.GetComponent<Pool>().Seltenheit[0].Units[randUID].gameObject.GetComponent<Unit>().id;
             /*if(randChance <=50)
@@ -108,10 +108,15 @@ public class TopDownController : NetworkBehaviour
            Units[i] = PullUnit();
         }
         pUnitButton.gameObject.SetActive(true);
+        pUnitButton.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[0]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton1.gameObject.SetActive(true);
+        pUnitButton1.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[1]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton2.gameObject.SetActive(true);
+        pUnitButton2.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[2]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton3.gameObject.SetActive(true);
+        pUnitButton3.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[3]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton4.gameObject.SetActive(true);
+        pUnitButton4.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[4]].gameObject.GetComponent<Unit>().UIimg;
     }
 
     void Update()
