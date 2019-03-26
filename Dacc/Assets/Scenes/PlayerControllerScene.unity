@@ -871,6 +871,12 @@ PrefabInstance:
       propertyPath: alive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6118140062615375555, guid: a98544e91f1395e4d8bc486d33ba0a09,
+        type: 3}
+      propertyPath: UnitsPrefab
+      value: 
+      objectReference: {fileID: 8673791714681665686, guid: b2627d1e598569c41a40812770a866ff,
+        type: 3}
     - target: {fileID: 6461798077264292387, guid: a98544e91f1395e4d8bc486d33ba0a09,
         type: 3}
       propertyPath: team

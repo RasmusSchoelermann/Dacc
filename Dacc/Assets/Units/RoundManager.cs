@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
 public class RoundManager : NetworkBehaviour
 {
     public List<GameObject> Boards;
@@ -14,13 +15,17 @@ public class RoundManager : NetworkBehaviour
     float preparetime = 30;
     float battletime = 60;
     int battleready = 0;
-    int round = 1;
+    int round = 0;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (isServer == false)
+        {
+            return;
+        }
+        //StartCoroutine(ExecuteAfterTime(35));
     }
 
     // Update is called once per frame
@@ -33,22 +38,13 @@ public class RoundManager : NetworkBehaviour
             {
                 return;
             }
-            StartCoroutine(ExecuteAfterTime(8));
 
-        }
-        if (Input.GetKeyDown("b"))
-        {
-            if (isServer == false)
-            {
-                return;
-            }
-            foreach (TopDownController c in controllers)
-            {
-                c.Board.GetComponent<Battle>().endbattle();
-            }
+            StopCoroutine(ExecuteAfterTime(1));
+            StartCoroutine(ExecuteAfterTime(2));
+
         }
        
-
+       
         }
 
     public void addcontroller(GameObject c)
@@ -86,17 +82,18 @@ public class RoundManager : NetworkBehaviour
 
         if (ready >= Boards.Count)
         {
+            battleready = 0;
             if (round < 4 || round > 5 && round % 5 == 0)
             {
                 foreach (GameObject c in Boards)
                 {
-                    battleready = 0;
+                   
                     c.GetComponent<Battle>().battle();
                 }
             }
             else
             {
-                battleready = 0;
+                
                 matchmaking.updatelist();
                 matchmaking.StartMatchmaking();
             }
@@ -117,11 +114,27 @@ public class RoundManager : NetworkBehaviour
             }
             battle = false;
             round++;
+            //NEW ROUND
+            foreach (TopDownController item in controllers)
+            {
+                if (item.name.StartsWith("LOCAL"))
+                {
+                    item.CmdNewRound(round);
+                }
+            }
             yield return new WaitForSeconds(time);
             StartCoroutine(ExecuteAfterTime(battletime));
         }
         else
         {
+            foreach (TopDownController item in controllers)
+            {
+                if (item.name.StartsWith("LOCAL"))
+                {
+                    item.CmdLockinput();
+                }
+            }
+            yield return new WaitForSeconds(5);
             battle = true;
             ready = 0;
             setupready = 0;
@@ -184,4 +197,5 @@ public class RoundManager : NetworkBehaviour
 
         }
     }
+   
 }

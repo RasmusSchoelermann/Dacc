@@ -147,14 +147,14 @@ public class Battle : NetworkBehaviour
     [Command]
     public void CmdScraddUnit(GameObject item,int X,int Y,int px,int py)
     {
-        if(Y == -1)
+        if(Y == -1 && py != -1)
         {
            
             BoardSave[px, py] = null;
             item.GetComponent<BoardLocation>().Bx = X;
             item.GetComponent<BoardLocation>().By = Y;
         }
-        else if(py == -1)
+        else if(py == -1 && Y != -1)
         {
 
             BoardSave[X, Y] = item.GetComponent<Unit>();
@@ -163,13 +163,14 @@ public class Battle : NetworkBehaviour
             //selectedUnit.ArrayX = test.Bx;
             //selectedUnit.ArrayY = test.By;
         }
-        else
+        else if(py != -1 && Y != -1)
         {
             BoardSave[X, Y] = item.GetComponent<Unit>();
             BoardSave[px, py] = null;
             item.GetComponent<BoardLocation>().Bx = X;
             item.GetComponent<BoardLocation>().By = Y;
         }
+
         item.GetComponent<Unit>().ArrayX = X;
         item.GetComponent<Unit>().ArrayY = Y;
        
@@ -202,8 +203,36 @@ public class Battle : NetworkBehaviour
             }
 
         }
-         //StartCoroutine(Example(C));
-         //C++;
+
+        int aliveunits = 0;
+        foreach (Unit item in EnemyUnits)
+        {
+            if (item != null)
+            {
+                aliveunits++;
+            }
+        }
+        if (aliveunits <= 0)
+        {
+            roundmanager.battlecheck();
+        }
+        else
+        {
+            aliveunits = 0;
+            foreach (Unit item in OwnUnits)
+            {
+                if (item != null)
+                {
+                    aliveunits++;
+                }
+            }
+            if (aliveunits <= 0)
+            {
+                roundmanager.battlecheck();
+            }
+        }
+        //StartCoroutine(Example(C));
+        //C++;
     }
 
     IEnumerator Example(int c)
@@ -325,10 +354,26 @@ public class Battle : NetworkBehaviour
                 aliveunits++;
             }
         }
-        if(aliveunits == 0)
+        if(aliveunits <= 0)
         {
             roundmanager.battlecheck();
         }
+        else
+        {
+            aliveunits = -1;
+            foreach (Unit item in OwnUnits)
+            {
+                if (item != null)
+                {
+                    aliveunits++;
+                }
+            }
+            if (aliveunits <= 0)
+            {
+                roundmanager.battlecheck();
+            }
+        }
+       
     }
 
     public void endbattle()
@@ -351,7 +396,11 @@ public class Battle : NetworkBehaviour
             }
             
         }
-    }
+
+        BattleBoard = new Unit[8, 8];
+        OwnUnits = new Unit[10];
+        EnemyUnits = new Unit[10];
+}
 
     public void spawncreeps()
     {

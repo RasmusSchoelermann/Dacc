@@ -60,7 +60,8 @@ public class TopDownController : NetworkBehaviour
 
     //Player
     public int Level = 1;
-
+    public bool pauseinput = true;
+    int placedunits = 0;
 
     [System.Serializable]
     public class MyEventType : UnityEvent { }
@@ -101,7 +102,7 @@ public class TopDownController : NetworkBehaviour
         
     }
 
-    void NewRound()
+    void NewRound(int round)
     {
         for (int i = 0; i < 5; i++)
         {
@@ -149,7 +150,7 @@ public class TopDownController : NetworkBehaviour
 
             if (Input.GetKeyDown("space"))
             {
-                NewRound();
+                NewRound(1);
                 switch (UIActive)
                 {
                     case false:
@@ -205,7 +206,8 @@ public class TopDownController : NetworkBehaviour
                                 if (Py == -1)
                                 {
                                     Bank[Px] = null;
-                                }
+                                   placedunits++;
+                                 }
                                 else
                                 {
                                     Feld[Px, Py] = null;
@@ -214,6 +216,7 @@ public class TopDownController : NetworkBehaviour
 
                                 
                                  CmdScraddUnit(Board, currentUnit, test.Bx, test.By,Px,Py);
+                                
 
 
                         }
@@ -237,12 +240,14 @@ public class TopDownController : NetworkBehaviour
                                 else
                                 {
                                     Feld[Px, Py] = null;
-
-                                }
+                                      placedunits--;
+    
+                                   }
                                 currentUnit.GetComponent<BoardLocation>().Bx = test.Bx;
                                 currentUnit.GetComponent<BoardLocation>().By = -1;
                                 CmdScraddUnit(Board, currentUnit, test.Bx, test.By, Px, Py);
-                            }
+                               
+                        }
                             else
                                 UnitHit = false;
 
@@ -349,34 +354,38 @@ public class TopDownController : NetworkBehaviour
 
     public void MoveUnit()
     {
-        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if(pauseinput == false)
         {
-            if (hit.transform.gameObject.tag == "Unit")
+            Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                if (hit.transform.gameObject.tag == "Unit")
                 {
-                    currentUnit = hit.transform.gameObject;
-                    BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                    if (test.By == -1)
+                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
                     {
-                        selectedUnit = Bank[test.Bx];
+                        currentUnit = hit.transform.gameObject;
+                        BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+                        if (test.By == -1)
+                        {
+                            selectedUnit = Bank[test.Bx];
+                        }
+                        else
+                        {
+                            selectedUnit = Feld[test.Bx, test.By];
+
+                        }
+
+                        Px = test.Bx;
+                        Py = test.By;
+                        UnitHit = true;
                     }
                     else
-                    {
-                        selectedUnit = Feld[test.Bx, test.By];
-
-                    }
-
-                    Px = test.Bx;
-                    Py = test.By;
-                    UnitHit = true;
+                        return;
                 }
-                else
-                    return;
             }
         }
+        
     }
 
     public void MoveSelectedBank()
@@ -386,42 +395,47 @@ public class TopDownController : NetworkBehaviour
 
     public void MoveToBank()
     {
-        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (pauseinput == false)
         {
-            if (hit.transform.gameObject.tag == "Unit")
+            Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                if (hit.transform.gameObject.tag == "Unit")
                 {
-                    for (int Bankpos = 0; Bankpos < 8;)
+                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
                     {
-                        if (Bank[Bankpos] == null)
+                        for (int Bankpos = 0; Bankpos < 8;)
                         {
-                            BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
-                            currentUnit.GetComponent<BoardLocation>().Bx = Bankpos;
-                            currentUnit.GetComponent<BoardLocation>().By = -1;
-                            selectedUnit = Feld[test.Bx, test.By];
-                            Px = test.Bx;
-                            Py = test.By;
-                            UnitHit = true;
-
-                            moveposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
-                            moveposition.y = 4f;
-                            CmdScrFigureSetDestination(moveposition, hit.transform.gameObject);
-                            UnitHit = false;
-                            Bank[Bankpos] = selectedUnit;
-                            Feld[Px, Py] = null;
-                            CmdScraddUnit(Board, hit.transform.gameObject, Bankpos, -1, Px, Py);
-                            MoveToBankSelected = false;
-                            return;
-                        }
-                        else
-                        {
-                            Bankpos++;
-                            if (Bankpos == 8)
+                            if (Bank[Bankpos] == null)
                             {
-                                print("Kein Platz");
+                                BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+
+                                selectedUnit = Feld[test.Bx, test.By];
+                                Px = test.Bx;
+                                Py = test.By;
+                                UnitHit = true;
+
+                                moveposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                                moveposition.y = 4f;
+                                CmdScrFigureSetDestination(moveposition, hit.transform.gameObject);
+                                UnitHit = false;
+                                Bank[Bankpos] = selectedUnit;
+                                currentUnit.GetComponent<BoardLocation>().Bx = Bankpos;
+                                currentUnit.GetComponent<BoardLocation>().By = -1;
+                                Feld[Px, Py] = null;
+                                CmdScraddUnit(Board, hit.transform.gameObject, Bankpos, -1, Px, Py);
+                                MoveToBankSelected = false;
+                                placedunits--;
+                                return;
+                            }
+                            else
+                            {
+                                Bankpos++;
+                                if (Bankpos == 8)
+                                {
+                                    print("Kein Platz");
+                                }
                             }
                         }
                     }
@@ -437,24 +451,101 @@ public class TopDownController : NetworkBehaviour
 
     public void SellUnit()
     {
-        print("Sold");
-        Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        bool UnitSelected = false;
-        if (SellSelected == true)
+        if (pauseinput == false)
         {
-            if (Physics.Raycast(ray, out hit))
+            print("Sold");
+            Ray ray = pcam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            bool UnitSelected = false;
+            if (SellSelected == true)
             {
-                if (hit.transform.gameObject.tag == "Unit")
+                if (Physics.Raycast(ray, out hit))
                 {
-                    if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                    if (hit.transform.gameObject.tag == "Unit")
                     {
-                        currentUnit = hit.transform.gameObject;
-                        Destroy(currentUnit);
-                        SellSelected = false;
+                        if (hit.transform.gameObject.GetComponent<Unit>().Team == PlayerTeam)
+                        {
+                            currentUnit = hit.transform.gameObject;
+                            BoardLocation test = hit.transform.gameObject.GetComponent<BoardLocation>();
+
+
+                            Px = test.Bx;
+                            Py = test.By;
+                            Feld[Px, Py] = null;
+                            
+                            CmdRemoveUnit(Board, hit.transform.gameObject, Px, Py);
+                            SellSelected = false;
+                        }
+                        else
+                            return;
+                    }
+                }
+            }
+        }
+    }
+
+    void checkunits()
+    {
+        if(placedunits > Level)
+        {
+            List<Unit> ownunits = new List<Unit>();
+           
+            foreach (Unit unit in Feld)
+            {
+                if(unit != null)
+                {
+                    ownunits.Add(unit);
+                  
+                }
+               
+            }
+            
+            while(placedunits > Level)
+            {
+                int i = Random.Range(0, ownunits.Count);
+                Unit unittoremove = ownunits[i];
+                for (int Bankpos = 0; Bankpos < 8;)
+                {
+                    if (Bank[Bankpos] == null)
+                    {
+                        BoardLocation test = unittoremove.gameObject.GetComponent<BoardLocation>();
+
+                        
+                        Px = test.Bx;
+                        Py = test.By;
+                        
+
+                        moveposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                        moveposition.y = 4f;
+                        CmdScrFigureSetDestination(moveposition, unittoremove.gameObject);
+                       
+                        Bank[Bankpos] = selectedUnit;
+                        unittoremove.GetComponent<BoardLocation>().Bx = Bankpos;
+                        unittoremove.GetComponent<BoardLocation>().By = -1;
+                        Feld[Px, Py] = null;
+                        CmdScraddUnit(Board, unittoremove.gameObject, Bankpos, -1, Px, Py);
+                        
+                        placedunits--;
+
+                        break;
+                       
                     }
                     else
-                        return;
+                    {
+                        Bankpos++;
+                        if (Bankpos == 8)
+                        {
+                            BoardLocation test = unittoremove.gameObject.GetComponent<BoardLocation>();
+
+                            
+                            Px = test.Bx;
+                            Py = test.By;
+                            Feld[Px, Py] = null;
+                            ownunits.Remove(unittoremove);
+                            CmdRemoveUnit(Board,unittoremove.gameObject,Px,Py);
+                            placedunits--;
+                        }
+                    }
                 }
             }
         }
@@ -495,6 +586,8 @@ public class TopDownController : NetworkBehaviour
             roundmanager.getrefs();
         }
         CmdScrtest(gameObject);
+        pauseinput = false;
+        NewRound(1);
     }
 
     [Command]
@@ -584,6 +677,41 @@ public class TopDownController : NetworkBehaviour
     {
         board.GetComponent<Battle>().CmdScraddUnit(item, X, Y,px,py);
 
+    }
+
+    [Command]
+    public void CmdRemoveUnit(GameObject board, GameObject item,int px, int py)
+    {
+        board.GetComponent<Battle>().CmdScrRemoveUnit(px, py);
+        Destroy(item);
+
+    }
+
+    [Command]
+    public void CmdNewRound(int round)
+    {
+        RpcNewRound(round);
+    }
+
+    [ClientRpc]
+    public void RpcNewRound(int round)
+    {
+
+        pauseinput = false;
+        NewRound(round);
+    }
+
+    [Command]
+    public void CmdLockinput()
+    {
+        RpcLockinput();
+    }
+
+    [ClientRpc]
+    public void RpcLockinput()
+    {
+        pauseinput = true;
+        checkunits();
     }
 
 }
