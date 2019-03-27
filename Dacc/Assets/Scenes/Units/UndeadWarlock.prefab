@@ -955,7 +955,9 @@ MonoBehaviour:
   ArrayY: 0
   maxHp: 100
   Hp: 100
+  Armor: 0
   Damage: 90
+  Lifesteal: 0
   Range: 4
   Attackspeed: 2
   mana: 0
@@ -967,6 +969,8 @@ MonoBehaviour:
   movedistance: 3
   UIimg: {fileID: 21300000, guid: ee81ad54479b0b64b90bc9756f310036, type: 3}
   Ultiscript: {fileID: 8483978005506081252}
+  Class: Warlock
+  Species: Undead
 --- !u!114 &1012178129174132707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1077,6 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5811b744d46cef40815e3588158ffe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Unit: {fileID: 0}
 --- !u!1 &2702180644837760610
 GameObject:
   m_ObjectHideFlags: 0

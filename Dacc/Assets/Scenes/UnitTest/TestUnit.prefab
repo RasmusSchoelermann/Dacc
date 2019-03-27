@@ -185,7 +185,9 @@ MonoBehaviour:
   ArrayY: 0
   maxHp: 100
   Hp: 100
+  Armor: 0
   Damage: 10
+  Lifesteal: 0
   Range: 1
   Attackspeed: 1
   mana: 0
@@ -197,6 +199,8 @@ MonoBehaviour:
   movedistance: 3
   UIimg: {fileID: 0}
   Ultiscript: {fileID: 3943440036414266062}
+  Class: Test
+  Species: Test
 --- !u!114 &3943440036414266062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,3 +213,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Unit: {fileID: 0}

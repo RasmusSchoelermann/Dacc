@@ -14,7 +14,9 @@ public class Unit : NetworkBehaviour
     public int ArrayY;
     public int maxHp = 100;
     public int Hp = 10;
+    public int Armor = 0;
     public int Damage = 10;
+    public int Lifesteal = 0;
     public int Range = 1;
     public float Attackspeed = 1;
     public int mana = 0;
@@ -29,6 +31,9 @@ public class Unit : NetworkBehaviour
     bool dead = false;
     public Ulti Ultiscript;
     Battle test;
+
+    public string Class;
+    public string Species;
 
     // Start is called before the first frame update
     void Start()
@@ -637,6 +642,7 @@ public class Unit : NetworkBehaviour
             {
                 Ulti();
             }
+            Hp = Hp + ((Damage / 100) * Lifesteal);
         }
         yield return new WaitForSeconds(Attackspeed);
 
@@ -664,7 +670,7 @@ public class Unit : NetworkBehaviour
 
     void HandleDamage(int Damage,Unit Causer) // Handle Damage adn detroy self if 0 hp
     {
-        Hp = Hp - Damage;
+        Hp = Hp - Damage; // Armor
         mana += manadamagegain;
         if (Hp <= 0)
         {

@@ -716,7 +716,9 @@ MonoBehaviour:
   ArrayY: 0
   maxHp: 300
   Hp: 300
+  Armor: 0
   Damage: 70
+  Lifesteal: 0
   Range: 2
   Attackspeed: 3
   mana: 0
@@ -728,6 +730,8 @@ MonoBehaviour:
   movedistance: 3
   UIimg: {fileID: 21300000, guid: ade7933124a198d438952c7f82fdf578, type: 3}
   Ultiscript: {fileID: 8112352628452981422}
+  Class: Druide
+  Species: Elemental
 --- !u!114 &1109483551892903045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -783,6 +787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Unit: {fileID: 0}
 --- !u!1 &7578127421729761632
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,6 +33,31 @@ public class Battle : NetworkBehaviour
 
     public RoundManager roundmanager;
 
+    //Synergien:
+    int Warlockbuff = 0;
+    int Warriorbuff = 0;
+    int Assasinbuff = 0;
+    int Demonhunterbuff = 0;
+    int Druidbuff = 0;
+    int Hunterbuff = 0;
+    int Knightbuff = 0;
+    int Magebuff = 0;
+    int Mechbuff = 0;
+    int Shamanbuff = 0;
+    int Beastbuff = 0;
+    int Demonbuff = 0;
+    int Dwarfbuff = 0;
+    int Dragonbuff = 0;
+    int Elementbuff = 0;
+    int Elfbuff = 0;
+    int Goblinbuff = 0;
+    int Humanbuff = 0;
+    int Nagabuff = 0;
+    int Ogrebuff = 0;
+    int Orcbuff = 0;
+    int Trollbuff = 0;
+    int Undeadbuff = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,7 +109,31 @@ public class Battle : NetworkBehaviour
         
         C = 0;
 
-        if(inbattle)
+         Warlockbuff = 0;
+         Warriorbuff = 0;
+         Assasinbuff = 0;
+        Demonhunterbuff = 0;
+         Druidbuff = 0;
+         Hunterbuff = 0;
+         Knightbuff = 0;
+         Magebuff = 0;
+         Mechbuff = 0;
+        Shamanbuff = 0;
+         Beastbuff = 0;
+         Demonbuff = 0;
+         Dwarfbuff = 0;
+         Dragonbuff = 0;
+         Elementbuff = 0;
+         Elfbuff = 0;
+         Goblinbuff = 0;
+         Humanbuff = 0;
+         Nagabuff = 0;
+         Ogrebuff = 0;
+         Orcbuff = 0;
+         Trollbuff = 0;
+         Undeadbuff = 0;
+
+        if (inbattle)
         {
             return;
         }
@@ -92,6 +141,7 @@ public class Battle : NetworkBehaviour
         // round++;
         
         int c =0;
+        List<int> ids = new List<int>();
         foreach (Unit U in BoardSave)
         {
             if (U != null)
@@ -110,11 +160,26 @@ public class Battle : NetworkBehaviour
                     BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
                     OwnUnits[c] = temp.GetComponent<Unit>();
                     U.gameObject.SetActive(false);
+                    if(ids.Contains(temp.GetComponent<Unit>().id) == false)
+                    {
+                        CheckclassandSpecies(temp.GetComponent<Unit>());
+                        ids.Add(temp.GetComponent<Unit>().id);
+                    }
+                    
                     c++;
                 }
                 
             }
 
+        }
+        
+        foreach (Unit U in OwnUnits)
+        {
+            if(U != null)
+            {
+                ApplyBuffs(U);
+            }
+           
         }
        //roundmanager = GameObject.FindGameObjectWithTag("manager").GetComponent<RoundManager>();
        roundmanager.readycheck();
@@ -142,6 +207,141 @@ public class Battle : NetworkBehaviour
         //battle();
     }
 
+    void CheckclassandSpecies(Unit u)
+    {
+        if (u.Class == "Warlock")
+        {
+            Warlockbuff++;
+
+        }
+        else if (u.Class == "Warrior")
+        {
+            Warriorbuff++;
+
+        }
+        else if (u.Class == "Shaman")
+        {
+           Shamanbuff++;
+
+        }
+        else if (u.Class == "Mech")
+        {
+            Mechbuff++;
+
+        }
+        else if (u.Class == "Mage")
+        {
+           Magebuff++;
+
+        }
+        else if (u.Class == "Knight")
+        {
+            Knightbuff++;
+
+        }
+        else if (u.Class == "Hunter")
+        {
+           Hunterbuff++;
+
+        }
+        else if (u.Class == "Druide")
+        {
+            Druidbuff++;
+
+        }
+        else if (u.Class == "Demon Hunter")
+        {
+            Demonhunterbuff++;
+
+        }
+        else if (u.Class == "Assassin")
+        {
+            Assasinbuff++;
+
+        }
+
+        if (u.Species == "Beast")
+        {
+            Beastbuff++;
+
+        }
+        else if (u.Species == "Demon")
+        {
+            Demonbuff++;
+
+        }
+        else if (u.Species == "Dragon")
+        {
+           Dragonbuff++;
+
+        }
+        else if (u.Species == "Dwarf")
+        {
+           Dwarfbuff++;
+
+        }
+        else if (u.Species == "Elemental")
+        {
+            Elementbuff++;
+
+        }
+        else if (u.Species == "Elf")
+        {
+            Elfbuff++;
+
+        }
+        else if (u.Species == "Goblin")
+        {
+            Goblinbuff++;
+
+        }
+        else if (u.Species == "Human")
+        {
+            Humanbuff++;
+
+        }
+        else if (u.Species == "Naga")
+        {
+            Nagabuff++;
+
+        }
+        else if (u.Species == "Ogre")
+        {
+            Ogrebuff++;
+
+        }
+        else if (u.Species == "Orc")
+        {
+           Orcbuff++;
+
+        }
+        else if (u.Species == "Troll")
+        {
+            Trollbuff++;
+
+        }
+        else if (u.Species == "Undead")
+        {
+            Undeadbuff++;
+
+        }
+
+    }
+
+    void ApplyBuffs(Unit u)
+    {
+        if (Warlockbuff >= 1)
+        {
+            u.Lifesteal += 10;
+        }
+        if(Warriorbuff >= 1)
+        {
+            if(u.Class == "Warrior")
+            {
+                u.Armor += 5;
+            }
+        }
+    }
    
 
     [Command]
