@@ -17,6 +17,9 @@ public class Unit : NetworkBehaviour
     public int Damage = 10;
     public int Range = 1;
     public float Attackspeed = 1;
+    public int mana = 0;
+    public int manaattackgain = 10;
+    public int manadamagegain = 15;
     public bool BoardTeam = false;
     bool activeai;
     public bool targetinrange;
@@ -24,6 +27,7 @@ public class Unit : NetworkBehaviour
     public int movedistance = 3;
     public Sprite UIimg;
     bool dead = false;
+    public Ulti Ultiscript;
     Battle test;
 
     // Start is called before the first frame update
@@ -628,6 +632,11 @@ public class Unit : NetworkBehaviour
         else
         {
             Target.HandleDamage(Damage,this);
+            mana += manaattackgain;
+            if (mana >= 100)
+            {
+                Ulti();
+            }
         }
         yield return new WaitForSeconds(Attackspeed);
 
@@ -656,6 +665,7 @@ public class Unit : NetworkBehaviour
     void HandleDamage(int Damage,Unit Causer) // Handle Damage adn detroy self if 0 hp
     {
         Hp = Hp - Damage;
+        mana += manadamagegain;
         if (Hp <= 0)
         {
 
@@ -668,8 +678,19 @@ public class Unit : NetworkBehaviour
 
 
         }
+        else
+        {
+            if(mana >= 100)
+            {
+                Ulti();
+            }
+        }
     }
        
+    void Ulti()
+    {
+        Ultiscript.testulti(id);
+    }
 }
 
 public class Cell

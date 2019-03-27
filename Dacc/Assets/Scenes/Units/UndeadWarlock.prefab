@@ -891,6 +891,7 @@ GameObject:
   - component: {fileID: 4194976840123326364}
   - component: {fileID: 9202417680523204814}
   - component: {fileID: 3685045068443824511}
+  - component: {fileID: 1028550792578166780}
   m_Layer: 0
   m_Name: UndeadWarlock
   m_TagString: Unit
@@ -949,6 +950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   id: 3
+  Pcost: 1
   ArrayX: 0
   ArrayY: 0
   maxHp: 100
@@ -956,11 +958,15 @@ MonoBehaviour:
   Damage: 90
   Range: 4
   Attackspeed: 2
+  mana: 0
+  manaattackgain: 10
+  manadamagegain: 15
   BoardTeam: 0
   targetinrange: 0
   taargetdis: 0
   movedistance: 3
   UIimg: {fileID: 21300000, guid: ee81ad54479b0b64b90bc9756f310036, type: 3}
+  Ultiscript: {fileID: 1028550792578166780}
 --- !u!114 &1012178129174132707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1059,6 +1065,18 @@ MonoBehaviour:
   width: 1
   mat: {fileID: 2100000, guid: 62b1b109ebfd33d4ab81c69ff22c6813, type: 2}
   tex: {fileID: 2800000, guid: 0d7c719c7f5bbe64da3f99731d28db8f, type: 3}
+--- !u!114 &1028550792578166780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2608784635850381428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2702180644837760610
 GameObject:
   m_ObjectHideFlags: 0

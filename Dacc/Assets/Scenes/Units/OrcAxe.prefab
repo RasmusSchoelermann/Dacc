@@ -544,6 +544,7 @@ GameObject:
   - component: {fileID: 8734825008036482162}
   - component: {fileID: 2755026512269275656}
   - component: {fileID: 4756565121703649172}
+  - component: {fileID: 5986323513674445819}
   m_Layer: 0
   m_Name: OrcAxe
   m_TagString: Unit
@@ -616,6 +617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   id: 0
+  Pcost: 1
   ArrayX: 0
   ArrayY: 0
   maxHp: 150
@@ -623,11 +625,15 @@ MonoBehaviour:
   Damage: 50
   Range: 1
   Attackspeed: 1
+  mana: 0
+  manaattackgain: 10
+  manadamagegain: 15
   BoardTeam: 0
   targetinrange: 0
   taargetdis: 0
   movedistance: 3
   UIimg: {fileID: 21300000, guid: 8d8aabae13136d843aeb4d8c423871bb, type: 3}
+  Ultiscript: {fileID: 5986323513674445819}
 --- !u!114 &969667985945661279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,6 +718,18 @@ MonoBehaviour:
   width: 1
   mat: {fileID: 2100000, guid: cad6fa3a83060754d98d2fb182f98fd5, type: 2}
   tex: {fileID: 2800000, guid: 5f4db5eb140577649a98e791cedcf0a5, type: 3}
+--- !u!114 &5986323513674445819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6770690527916363026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6770690527916363104
 GameObject:
   m_ObjectHideFlags: 0

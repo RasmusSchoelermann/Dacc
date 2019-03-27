@@ -1080,6 +1080,7 @@ GameObject:
   - component: {fileID: 5529732533381818182}
   - component: {fileID: 6060436015347213990}
   - component: {fileID: 6965454186723904132}
+  - component: {fileID: 2618512857060360975}
   m_Layer: 0
   m_Name: HumanSpear
   m_TagString: Unit
@@ -1198,6 +1199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   id: 1
+  Pcost: 1
   ArrayX: 0
   ArrayY: 0
   maxHp: 200
@@ -1205,11 +1207,15 @@ MonoBehaviour:
   Damage: 35
   Range: 1
   Attackspeed: 1
+  mana: 0
+  manaattackgain: 10
+  manadamagegain: 15
   BoardTeam: 0
   targetinrange: 0
   taargetdis: 0
   movedistance: 3
   UIimg: {fileID: 21300000, guid: c17135fa07ec8004697d998b9878da1d, type: 3}
+  Ultiscript: {fileID: 2618512857060360975}
 --- !u!114 &5939261871113264052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,6 +1267,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6391901554020204124}
   m_CullTransparentMesh: 0
+--- !u!114 &2618512857060360975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391901554020204124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6391901554020204126
 GameObject:
   m_ObjectHideFlags: 0

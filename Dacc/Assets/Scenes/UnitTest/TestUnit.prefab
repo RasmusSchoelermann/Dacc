@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5575105685553616455}
   - component: {fileID: 8673791714681665687}
   - component: {fileID: 1090414281302648082}
+  - component: {fileID: 3943440036414266062}
   m_Layer: 0
   m_Name: TestUnit
   m_TagString: Unit
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   id: 0
+  Pcost: 1
   ArrayX: 0
   ArrayY: 0
   maxHp: 100
@@ -186,6 +188,24 @@ MonoBehaviour:
   Damage: 10
   Range: 1
   Attackspeed: 1
+  mana: 0
+  manaattackgain: 10
+  manadamagegain: 15
   BoardTeam: 0
   targetinrange: 0
   taargetdis: 0
+  movedistance: 3
+  UIimg: {fileID: 0}
+  Ultiscript: {fileID: 3943440036414266062}
+--- !u!114 &3943440036414266062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673791714681665686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2611c1151de614686bd8c42e8dffc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
