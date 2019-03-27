@@ -489,8 +489,8 @@ public class TopDownController : NetworkBehaviour
                                 CmdScrFigureSetDestination(moveposition, hit.transform.gameObject);
                                 UnitHit = false;
                                 Bank[Bankpos] = selectedUnit;
-                                currentUnit.GetComponent<BoardLocation>().Bx = Bankpos;
-                                currentUnit.GetComponent<BoardLocation>().By = -1;
+                                hit.transform.gameObject.GetComponent<BoardLocation>().Bx = Bankpos;
+                                hit.transform.gameObject.GetComponent<BoardLocation>().By = -1;
                                 Feld[Px, Py] = null;
                                 CmdScraddUnit(Board, hit.transform.gameObject, Bankpos, -1, Px, Py);
                                 MoveToBankSelected = false;

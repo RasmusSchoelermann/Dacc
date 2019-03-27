@@ -689,7 +689,8 @@ public class Unit : NetworkBehaviour
        
     void Ulti()
     {
-        Ultiscript.testulti(id);
+        mana = 0;
+        Ultiscript.testulti(id,this);
     }
 }
 
