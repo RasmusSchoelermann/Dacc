@@ -32,21 +32,22 @@ public class TopDownController : NetworkBehaviour
     public bool UnitHit = false;
     public RoundManager roundmanager;
 
-    public Unit[,] Feld = new Unit[8,8];
+    public Unit[,] Feld = new Unit[8, 8];
     Unit[] Bank = new Unit[8];
-   
-        
+
+
     GameObject currentUnit;
-     Unit selectedUnit;
+    Unit selectedUnit;
     int Px;
     int Py;
 
     //UI
     //public Image pLock;
     public int[] Units = new int[5];
+    public int[] Unitscost = new int[5];
     public GameObject pBuyUi;
     //public Button pUnit;
-    public Button pUnitButton,pUnitButton1,pUnitButton2,pUnitButton3,pUnitButton4,pRollButton,pExitButton;
+    public Button pUnitButton, pUnitButton1, pUnitButton2, pUnitButton3, pUnitButton4, pRollButton, pExitButton;
     public Button pMove, pbBank, pSell, pRoll, pLevel;
     bool UIActive = false;
     bool SellSelected = false;
@@ -59,9 +60,12 @@ public class TopDownController : NetworkBehaviour
     public GameObject UPool;
 
     //Player
-    public int Level = 1;
+    public int Level = 0;
+    public int exp = 0;
+    int[] expneeded = { 1, 1, 1, 2, 4, 8, 16, 24, 32, 40 };
     public bool pauseinput = true;
     int placedunits = 0;
+    int gold = 0;
 
     [System.Serializable]
     public class MyEventType : UnityEvent { }
@@ -107,7 +111,9 @@ public class TopDownController : NetworkBehaviour
         for (int i = 0; i < 5; i++)
         {
            Units[i] = PullUnit();
+            Unitscost[i] = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[i]].gameObject.GetComponent<Unit>().Pcost;
         }
+        
         pUnitButton.gameObject.SetActive(true);
         pUnitButton.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[0]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton1.gameObject.SetActive(true);
@@ -118,6 +124,53 @@ public class TopDownController : NetworkBehaviour
         pUnitButton3.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[3]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton4.gameObject.SetActive(true);
         pUnitButton4.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[4]].gameObject.GetComponent<Unit>().UIimg;
+        lvlup(1);
+        UpdateGold(round);
+    }
+
+    void lvlup(int Exp)
+    {
+        if(Level == 10)
+        {
+            return;
+        }
+        else
+        {
+            exp += Exp;
+            if (exp >= expneeded[Level])
+            {
+                Level++;
+                //print(Level);
+                int over = exp - expneeded[Level];
+                if (over > 0)
+                {
+                    exp = over;
+                    print(over);
+                    lvlup(0);
+                }
+                else
+                    exp = 0;
+            }
+        }
+        
+    }
+
+    void UpdateGold(int round)
+    {
+        if(round > 4)
+        {
+            gold += 5;
+            gold = gold + Getinterest(gold, 10);
+        }
+        else if(round < 5)
+        {
+            gold += round;
+        }
+    }
+
+    public static int Getinterest(int value, int place)
+    {
+        return ((value % (place * 10)) - (value % place)) / place;
     }
 
     void Update()
@@ -150,7 +203,7 @@ public class TopDownController : NetworkBehaviour
 
             if (Input.GetKeyDown("space"))
             {
-                NewRound(1);
+                //NewRound(1);
                 switch (UIActive)
                 {
                     case false:
@@ -169,7 +222,17 @@ public class TopDownController : NetworkBehaviour
             {
                 pSell.onClick.Invoke();
             }
-        
+        if (Input.GetKeyDown("d"))
+        {
+            if(gold >= 4)
+            {
+                gold -= 4;
+                lvlup(4);
+            }
+            
+           
+        }
+
 
         /*if (Input.GetKey("y"))
         {
@@ -325,29 +388,34 @@ public class TopDownController : NetworkBehaviour
 
     public void BuyUnit(int slot)
     {
-        for (int Bankpos = 0; Bankpos < 8;)
+        if(gold >= Unitscost[slot])
         {
-            if (Bank[Bankpos] == null)
+            gold -= Unitscost[slot];
+            for (int Bankpos = 0; Bankpos < 8;)
             {
-                print("oh boy it begins again");
-                EventSystem.current.currentSelectedGameObject.SetActive(false);
-                spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
-                spawnposition.y = 4f;
-                // Quaternion test = new Quaternion();
-                // test.y = -90;
-                CmdScrbuyUnit(spawnposition ,Units[slot] ,Bankpos,PlayerTeam);
-                return;
-            }
-            else
-            {
-                Bankpos++;
-                if (Bankpos == 8)
+                if (Bank[Bankpos] == null)
                 {
-                    print("Kein Platz");
+                   
+                    EventSystem.current.currentSelectedGameObject.SetActive(false);
+                    spawnposition = Bankfrech.GetComponent<Bank>().Slots[Bankpos].gameObject.transform.position;
+                    spawnposition.y = 4f;
+                    // Quaternion test = new Quaternion();
+                    // test.y = -90;
+                    CmdScrbuyUnit(spawnposition, Units[slot], Bankpos, PlayerTeam);
+                    return;
                 }
-            }
+                else
+                {
+                    Bankpos++;
+                    if (Bankpos == 8)
+                    {
+                        print("Kein Platz");
+                    }
+                }
 
+            }
         }
+       
 
 
     }
@@ -472,7 +540,8 @@ public class TopDownController : NetworkBehaviour
                             Px = test.Bx;
                             Py = test.By;
                             Feld[Px, Py] = null;
-                            
+
+                            gold += hit.transform.gameObject.GetComponent<Unit>().Pcost;
                             CmdRemoveUnit(Board, hit.transform.gameObject, Px, Py);
                             SellSelected = false;
                         }
@@ -542,6 +611,7 @@ public class TopDownController : NetworkBehaviour
                             Py = test.By;
                             Feld[Px, Py] = null;
                             ownunits.Remove(unittoremove);
+                            gold += unittoremove.GetComponent<Unit>().Pcost;
                             CmdRemoveUnit(Board,unittoremove.gameObject,Px,Py);
                             placedunits--;
                         }
@@ -587,7 +657,7 @@ public class TopDownController : NetworkBehaviour
         }
         CmdScrtest(gameObject);
         pauseinput = false;
-        NewRound(1);
+        //NewRound(1);
     }
 
     [Command]

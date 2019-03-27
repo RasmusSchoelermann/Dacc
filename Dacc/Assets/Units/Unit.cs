@@ -8,6 +8,7 @@ public class Unit : NetworkBehaviour
 {
     [SyncVar]public int Team;
     public int id;
+    public int Pcost = 1;
 
     public int ArrayX;
     public int ArrayY;

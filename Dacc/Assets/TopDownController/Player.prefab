@@ -3307,7 +3307,9 @@ MonoBehaviour:
   moveposition: {x: 0, y: 0, z: 0}
   spawnRotation: {x: 0, y: -90, z: 0, w: 0}
   UPool: {fileID: 0}
-  Level: 1
+  Level: 0
+  exp: 0
+  pauseinput: 1
   OnEvent:
     m_PersistentCalls:
       m_Calls: []

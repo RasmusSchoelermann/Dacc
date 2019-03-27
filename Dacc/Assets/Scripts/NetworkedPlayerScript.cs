@@ -46,7 +46,7 @@ public class NetworkedPlayerScript : NetworkBehaviour
             if (dis <= 10)
             {
                 CmdScrTeamSetDestination(0);
-                print(dis);
+                //print(dis);
             }
 
         }
