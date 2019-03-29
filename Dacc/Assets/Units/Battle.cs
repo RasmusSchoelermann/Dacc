@@ -155,6 +155,10 @@ public class Battle : NetworkBehaviour
                 {
                     GameObject temp = (GameObject)Instantiate(U.gameObject, U.gameObject.transform.position, spawnRotation);
                     NetworkServer.Spawn(temp);
+                    var rotationVector = transform.rotation.eulerAngles;
+                    rotationVector.y = -90;
+                    temp.transform.rotation = Quaternion.Euler(rotationVector);
+
                     U.ArrayX = U.GetComponent<BoardLocation>().Bx;
                     U.ArrayY = U.GetComponent<BoardLocation>().By;
                     BattleBoard[U.ArrayX, U.ArrayY] = temp.GetComponent<Unit>();
@@ -474,7 +478,7 @@ public class Battle : NetworkBehaviour
     }
    //public void 
 
-    public Unit RangeCheck(Unit Unit,bool boardteam)
+    public Unit RangeCheck(Unit Unit,bool boardteam,int unitrange)
     {
         Unit temp = null;
         float dis = 1000;
@@ -489,7 +493,7 @@ public class Battle : NetworkBehaviour
                     {
                         Udis = Udis * -1;
                     }
-                    if (Mathf.Floor(Udis) <= Unit.Range)
+                    if (Mathf.Floor(Udis) <= unitrange)
                     {
                         Unit.targetinrange = true;
                         return u;
@@ -521,7 +525,7 @@ public class Battle : NetworkBehaviour
                     {
                         Udis = Udis * -1;
                     }
-                    if (Mathf.Floor(Udis) <= Unit.Range)
+                    if (Mathf.Floor(Udis) <= unitrange)
                     {
                         Unit.targetinrange = true;
                         return u;
@@ -544,23 +548,27 @@ public class Battle : NetworkBehaviour
         return null;
     }
 
-    public void checkboard()
+    public void checkboard(bool boardteam)
     {
-        int aliveunits = -1;
-        foreach (Unit item in EnemyUnits)
+        if(boardteam == false)
         {
-            if(item != null)
+            int aliveunits = -1;
+            foreach (Unit item in EnemyUnits)
             {
-                aliveunits++;
+                if (item != null)
+                {
+                    aliveunits++;
+                }
             }
-        }
-        if(aliveunits <= 0)
-        {
-            roundmanager.battlecheck();
+            if (aliveunits <= 0)
+            {
+                roundmanager.battlecheck();
+                // WON
+            }
         }
         else
         {
-            aliveunits = -1;
+            int aliveunits = -1;
             foreach (Unit item in OwnUnits)
             {
                 if (item != null)
@@ -571,6 +579,7 @@ public class Battle : NetworkBehaviour
             if (aliveunits <= 0)
             {
                 roundmanager.battlecheck();
+                // Lost
             }
         }
        
@@ -616,6 +625,11 @@ public class Battle : NetworkBehaviour
             Creep.GetComponent<Unit>().ArrayY = 0;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
+
+            var rotationVector = transform.rotation.eulerAngles;
+            rotationVector.y = 90;
+            Creep.transform.rotation = Quaternion.Euler(rotationVector);
+
             EnemyUnits[0] = Creep.GetComponent<Unit>();
             BattleBoard[3, 0] = Creep.GetComponent<Unit>();
 
@@ -629,6 +643,8 @@ public class Battle : NetworkBehaviour
             Creep.GetComponent<Unit>().ArrayY = 0;
             Creep.GetComponent<Unit>().Team = -1;
             NetworkServer.Spawn(Creep);
+           
+            Creep.transform.rotation = Quaternion.Euler(rotationVector);
             EnemyUnits[1] = Creep.GetComponent<Unit>();
             BattleBoard[4, 0] = Creep.GetComponent<Unit>();
 

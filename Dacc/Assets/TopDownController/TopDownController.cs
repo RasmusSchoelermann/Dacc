@@ -84,7 +84,7 @@ public class TopDownController : NetworkBehaviour
         int randChance;
         GameObject UnitsPrefab;
         randChance = Random.Range(1, 100);
-        if (Level == 1)
+        if (true)
         {
             int randUID;
             Random.InitState(Random.Range(0, 9999));
@@ -108,6 +108,9 @@ public class TopDownController : NetworkBehaviour
 
     void NewRound(int round)
     {
+        lvlup(1);
+        UpdateGold(round);
+
         for (int i = 0; i < 5; i++)
         {
            Units[i] = PullUnit();
@@ -124,8 +127,7 @@ public class TopDownController : NetworkBehaviour
         pUnitButton3.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[3]].gameObject.GetComponent<Unit>().UIimg;
         pUnitButton4.gameObject.SetActive(true);
         pUnitButton4.image.sprite = UPool.GetComponent<Pool>().Seltenheit[0].Units[Units[4]].gameObject.GetComponent<Unit>().UIimg;
-        lvlup(1);
-        UpdateGold(round);
+       
     }
 
     void lvlup(int Exp)

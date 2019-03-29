@@ -951,11 +951,13 @@ MonoBehaviour:
   Team: 0
   id: 3
   Pcost: 1
+  LvL: 0
   ArrayX: 0
   ArrayY: 0
   maxHp: 100
   Hp: 100
   Armor: 0
+  MArmor: 0
   Damage: 90
   Lifesteal: 0
   Range: 4
@@ -968,7 +970,9 @@ MonoBehaviour:
   taargetdis: 0
   movedistance: 3
   UIimg: {fileID: 21300000, guid: ee81ad54479b0b64b90bc9756f310036, type: 3}
+  Healthbar: {fileID: 1860710990125117699}
   Ultiscript: {fileID: 8483978005506081252}
+  UltiRange: 1
   Class: Warlock
   Species: Undead
 --- !u!114 &1012178129174132707

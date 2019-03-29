@@ -9,12 +9,16 @@ public class Unit : NetworkBehaviour
     [SyncVar]public int Team;
     public int id;
     public int Pcost = 1;
+   // public string Name;
+
+    public int LvL = 1;
 
     public int ArrayX;
     public int ArrayY;
     public int maxHp = 100;
     public int Hp = 10;
     public int Armor = 0;
+    public int MArmor = 0;
     public int Damage = 10;
     public int Lifesteal = 0;
     public int Range = 1;
@@ -28,8 +32,11 @@ public class Unit : NetworkBehaviour
     public float taargetdis;
     public int movedistance = 3;
     public Sprite UIimg;
+    public Image Healthbar;
     bool dead = false;
     public Ulti Ultiscript;
+    public int UltiRange = 1;
+    bool ultiready = false;
     Battle test;
 
     public string Class;
@@ -51,6 +58,8 @@ public class Unit : NetworkBehaviour
     {
         //Unit nextUnit = null;
         test = Battleboard;
+        Ultiscript.setup(this);
+
         //gameObject.transform.position;
         //test.MoveUnit(this, 3, 3);
         //nextUnit = test.RangeCheck(this,BoardTeam);
@@ -58,14 +67,33 @@ public class Unit : NetworkBehaviour
         StartCoroutine(AI());
     }
 
-    IEnumerator AI()
+    public IEnumerator AI()
     {
         yield return new WaitForSeconds(1f);
         Unit nextUnit = null;
-        nextUnit = test.RangeCheck(this, BoardTeam);
+        if(ultiready == true && UltiRange != 0)
+        {
+            nextUnit = test.RangeCheck(this, BoardTeam,UltiRange);
+        }
+        else if(ultiready == true && UltiRange == 0)
+        {
+            Ulti(nextUnit);
+        }
+        else
+        {
+            nextUnit = test.RangeCheck(this, BoardTeam, Range);
+        }
+        
         if (targetinrange)
         {
-            StartCoroutine(Attack(nextUnit));
+            if (ultiready == true && nextUnit != null)
+            {
+                Ulti(nextUnit);
+            }
+            else
+            {
+                StartCoroutine(Attack(nextUnit));
+            }
         }
         else
         {
@@ -636,13 +664,13 @@ public class Unit : NetworkBehaviour
         }
         else
         {
-            Target.HandleDamage(Damage,this);
+            Target.HandleDamage(Damage,this,"Physic");
             mana += manaattackgain;
             if (mana >= 100)
             {
-                Ulti();
+                ultiready = true;
             }
-            Hp = Hp + ((Damage / 100) * Lifesteal);
+            Hp = Hp + ((Damage / 100) * Lifesteal); // Lifesteal
         }
         yield return new WaitForSeconds(Attackspeed);
 
@@ -668,17 +696,30 @@ public class Unit : NetworkBehaviour
           
     }
 
-    void HandleDamage(int Damage,Unit Causer) // Handle Damage adn detroy self if 0 hp
+    public void HandleDamage(int Damage,Unit Causer,string type) // Handle Damage adn detroy self if 0 hp
     {
-        Hp = Hp - Damage; // Armor
+        if(type == "Physic")
+        {
+            Hp = Hp - (Damage - (Damage / 100 * Armor)); // Armor
+        }
+        else if (type == "True")
+        {
+            Hp = Hp - Damage;
+        }
+        else if (type == "Magic")
+        {
+            Hp = Hp - (Damage - (Damage / 100 * MArmor)); // Armor
+        }
+
         mana += manadamagegain;
+        Updatehp(Hp);
         if (Hp <= 0)
         {
 
             if (dead == false)
             {
                 dead = true;
-                test.checkboard();
+                test.checkboard(BoardTeam);
                 Destroy(this.gameObject);
             }
 
@@ -688,15 +729,26 @@ public class Unit : NetworkBehaviour
         {
             if(mana >= 100)
             {
-                Ulti();
+                ultiready = true;
             }
         }
     }
        
-    void Ulti()
+
+    void Updatehp(int newhp)
     {
+        float prozent = ((newhp * 100) / maxHp);
+        prozent /= 100;
+
+        Healthbar.fillAmount = prozent;
+    }
+
+    void Ulti(Unit target)
+    {
+        StopAllCoroutines();
         mana = 0;
-        Ultiscript.testulti(id,this);
+        ultiready = false;
+        Ultiscript.testulti(LvL,target);
     }
 }
 
